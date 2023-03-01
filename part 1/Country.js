@@ -1,3 +1,5 @@
+import countriesJSON from './countries.json' assert { type: 'JSON' };
+
 class Country {
     constructor(alpha3Code, area, borderCountries, capital, continent, demonym, flag, name, population, topLeveLDomains, currencies, languages) {
         this.alpha3Code = alpha3Code;
@@ -108,22 +110,33 @@ class Country {
     //return border countries
     getBorders() {
         let borders = this.borders;
+
+        //check if the country has currencies
         if (!borders) {
             return null;
         }
 
-        // create border countries list
-        let borderCountries = borders.map((border) => {
-            let country = countries.find((c) => c.alpha3Code === border);
-            return country;
-        });
-        return borderCountries;
+        
+        let countries = Countries.getAll();
+
+        return borders.map(code => countries.find(country => country.alpha3Code === code));
+    }
+
+    //return currencies infos
+    getCurrencies() {
+        let currencies = this.currencies;
+
+        //check if the country has currencies
+        if (!currencies) {
+            return null;
+        } else {
+            return currencies.map(currency => new Currency(currency));
+        }
     }
 }
 
 function fill_db() {
-    //read json file
-    let countriesJSON = fs.readFileSync('countries.json', 'utf8');
+    //the json file is read in the import
 
     //parse json into js object
     let countriesJS = JSON.parse(countriesJSON);
