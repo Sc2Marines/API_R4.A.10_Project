@@ -1,5 +1,5 @@
 class Country {
-    constructor(alpha3Code, area, borderCountries, capital, continent, demonym, flag, name, population, topLeveLDomains, currencies, langages) {
+    constructor(alpha3Code, area, borderCountries, capital, continent, demonym, flag, name, population, topLeveLDomains, currencies, languages) {
         this.alpha3Code = alpha3Code;
         this.area = area;
         this.borderCountries = borderCountries;
@@ -11,7 +11,7 @@ class Country {
         this.population = population;
         this.topLeveLDomains = topLeveLDomains;
         this.currencies = currencies;
-        this.langages = langages;
+        this.languages = languages;
     }
 
     // getters
@@ -49,7 +49,7 @@ class Country {
         return this.currencies;
     }
     getLanguages() {
-        return this.langages;
+        return this.languages;
     }
 
     // setters
@@ -86,13 +86,13 @@ class Country {
     setCurrencies(currencies) {
         this.currencies = currencies;
     }
-    setLanguages(langages) {
-        this.langages = langages;
+    setLanguages(languages) {
+        this.languages = languages;
     }
 
     // toString method
     toString() {
-        return `Alpha3Code: ${this.alpha3Code}, Area: ${this.area}, BorderCountries: ${this.borderCountries}, Country name: ${this.name}, Capital: ${this.capital}, Continent: ${this.continent}, Demonym: ${this.demonym}, Flag: ${this.flag}, Population: ${this.population}, Top Level Domains: ${this.topLeveLDomains}, Currencies: ${this.currencies}, Languages: ${this.langages}`;
+        return `Alpha3Code: ${this.alpha3Code}, Area: ${this.area}, BorderCountries: ${this.borderCountries}, Country name: ${this.name}, Capital: ${this.capital}, Continent: ${this.continent}, Demonym: ${this.demonym}, Flag: ${this.flag}, Population: ${this.population}, Top Level Domains: ${this.topLeveLDomains}, Currencies: ${this.currencies}, Languages: ${this.languages}`;
     }
 
     //return population density
