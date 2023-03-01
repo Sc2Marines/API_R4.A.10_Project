@@ -1,5 +1,3 @@
-import countriesJSON from './countries.json' assert { type: 'JSON' };
-
 class Country {
     constructor(alpha3Code, area, borderCountries, capital, continent, demonym, flag, name, population, topLeveLDomains, currencies, languages) {
         this.alpha3Code = alpha3Code;
@@ -136,7 +134,8 @@ class Country {
 }
 
 function fill_db() {
-    //the json file is read in the import
+    //import json file
+    let countriesJSON = require('./countries.json');
 
     //parse json into js object
     let countriesJS = JSON.parse(countriesJSON);
