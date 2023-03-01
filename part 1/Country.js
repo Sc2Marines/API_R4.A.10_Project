@@ -169,3 +169,5 @@ function fill_db() {
     //return final table
     return allCountries;
 }
+
+export default fill_db;
