@@ -1,12 +1,15 @@
+import json from "./countries.json" assert { type: "json" };
+
+
 class Country {
-    constructor(alpha3Code, area, borderCountries, capital, continent, demonym, flag, name, population, topLeveLDomains, currencies, languages) {
+    constructor(alpha3Code, area, borders, capital, continent, demonym, flags, name, population, topLeveLDomains, currencies, languages) {
         this.alpha3Code = alpha3Code;
         this.area = area;
-        this.borderCountries = borderCountries;
+        this.borders = borders;
         this.capital = capital;
         this.continent = continent;
         this.demonym = demonym;
-        this.flag = flag;
+        this.flags = flags;
         this.name = name;
         this.population = population;
         this.topLeveLDomains = topLeveLDomains;
@@ -21,9 +24,9 @@ class Country {
     getArea() {
         return this.area;
     }
-    getBorderCountries() {
-        return this.borderCountries;
-    }
+    // getborders() {
+    //     return this.borders;
+    // }
     getCapital() {
         return this.capital;
     }
@@ -33,8 +36,8 @@ class Country {
     getDemonym() {
         return this.demonym;
     }
-    getFlag() {
-        return this.flag;
+    getflags() {
+        return this.flags;
     }
     getName() {
         return this.name;
@@ -45,9 +48,9 @@ class Country {
     getTopLevelDomains() {
         return this.topLeveLDomains;
     }
-    getCurrencies() {
-        return this.currencies;
-    }
+    // getCurrencies() {
+    //     return this.currencies;
+    // }
     getLanguages() {
         return this.languages;
     }
@@ -59,8 +62,8 @@ class Country {
     setArea(area) {
         this.area = area;
     }
-    setBorderCountries(borderCountries) {
-        this.borderCountries = borderCountries;
+    setborders(borders) {
+        this.borders = borders;
     }
     setCapital(capital) {
         this.capital = capital;
@@ -71,8 +74,8 @@ class Country {
     setDemonym(demonym) {
         this.demonym = demonym;
     }
-    setFlag(flag) {
-        this.flag = flag;
+    setflags(flags) {
+        this.flags = flags;
     }
     setName(name) {
         this.name = name;
@@ -92,7 +95,7 @@ class Country {
 
     // toString method
     toString() {
-        return `Alpha3Code: ${this.alpha3Code}, Area: ${this.area}, BorderCountries: ${this.borderCountries}, Country name: ${this.name}, Capital: ${this.capital}, Continent: ${this.continent}, Demonym: ${this.demonym}, Flag: ${this.flag}, Population: ${this.population}, Top Level Domains: ${this.topLeveLDomains}, Currencies: ${this.currencies}, Languages: ${this.languages}`;
+        return `Alpha3Code: ${this.alpha3Code}, Area: ${this.area}, borders: ${this.borders}, Country name: ${this.name}, Capital: ${this.capital}, Continent: ${this.continent}, Demonym: ${this.demonym}, flags: ${this.flags}, Population: ${this.population}, Top Level Domains: ${this.topLeveLDomains}, Currencies: ${this.currencies}, Languages: ${this.languages}`;
     }
 
     //return population density
@@ -107,70 +110,60 @@ class Country {
 
     //return border countries
     getBorders() {
-        let borders = this.borders;
+        let borderCountries = [];
 
-        //check if the country has currencies
-        if (!borders) {
-            return null;
-        }
+        this.borders.forEach(element => {
+            let new_border_country = countries.find((c) => c.alpha3Code === element);
+            borderCountries.push(new_border_country);
+        });
 
-        let borderCountries = borders.map(borderCode => allCountries.find(country => country.alpha3Code === borderCode));
-        return borderCountries.filter(country => country != null);
+        return borderCountries;
     }
 
     //return currencies infos
-    getCurrencies() {
-        let currencies = this.currencies;
-
-        //check if the country has currencies
-        if (!currencies) {
-            return null;
-        } else {
-            return currencies.map(currency => new Currency(currency));
-        }
-    }
+    // getCurrencies() {
+    //     let currencies = currencies.map(borderCode => allCountries.find(country => country.alpha3Code === borderCode));
+    //     return currencies.filter(country => country != null);
+    // }
 }
 
-function fill_db(json) {
-    console.log("fill_db");
-    console.log(json);
+const countries = fill_db();
 
+function fill_db() {
     //initialise final countries table
-    let allCountries = {};
+    let allCountries = [];
 
     //loop travelling each country
-    json.forEach(country => {
+    json.forEach(country => {  //json is imported at first line
         //create a new country
         let new_country = new Country(
             country.alpha3Code,
             country.area,
-            country.borderCountries,
+            country.borders,
             country.capital,
             country.region,
             country.demonym,
-            country.flag,
+            country.flags,
             country.name,
             country.population,
             country.topLevelDomain,
             country.currencies,
             country.languages
         );
-    });
 
-    //add new country into final table
-    allCountries[country.alpha3Code] = new_country;
+        //add new country into final table
+        allCountries[country.alpha3Code] = new_country;
+    });
 
     //return final table
     return allCountries;
 }
 
-//import json file with import
-fetch('./countries.json')
-    .then(response => response.json())
-    .then(data => {
-        // Utilisez l'objet JS récupéré ici
-        //console.log(data);
-        fill_db(data);
-    });
+let list = fill_db();
+console.log(countries); //ok
+console.log(countries["FRA"]); //ok
+console.log(countries["FRA"].getPopDensity()); //ok
+console.log(countries['FRA'].getBorders());
+console.log(countries['FRA'].getCurrencies());
 
 export default fill_db;
