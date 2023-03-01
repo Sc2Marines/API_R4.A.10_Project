@@ -134,6 +134,7 @@ class Country {
 function fill_db(json) {
     console.log("fill_db");
     console.log(json);
+
     //initialise final countries table
     let allCountries = {};
 
@@ -171,8 +172,5 @@ fetch('./countries.json')
         //console.log(data);
         fill_db(data);
     });
-
-countriesList = fill_db();
-console.log(countriesList);
 
 export default fill_db;
