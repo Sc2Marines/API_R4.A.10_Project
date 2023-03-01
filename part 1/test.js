@@ -6,7 +6,7 @@ import fill_db from './Country.js';
 
 
 //c array of class Country (calling method fill_db of file Country.js)
-let c = fill_db();
+//let c = fill_db();
 
 //Q1 - outsideTheContinent() : Pays dont au moins un pays frontalier n’est pas dans le
 // même continent.
@@ -28,7 +28,7 @@ function outsideTheContinent() {
     return countries;
 }
 
-console.log(outsideTheContinent());
+//console.log(outsideTheContinent());
 
 //Q2 - moreNeighbors() : Pays(possibilité de plusieurs) ayant le plus grand nombre de
 // voisins.Affichez aussi les voisins.
@@ -50,13 +50,28 @@ function moreNeighbors() {
     return countries;
 }
 
-console.log(moreNeighbors());
+//console.log(moreNeighbors());
 
 //Q3 - neighborless() : Pays n’ayant aucun voisin.
+
+function neighborless() {
+    let countries = [];
+    for (let i = 0; i < c.length; i++) {
+        let country = c[i];
+        let borders = country.getBorderCountries;
+        if (borders.length == 0) {
+            countries.push(country);
+        }
+    }
+    return countries;
+}
+
 
 
 //Q4 - moreLanguages() : Pays(possibilité de plusieurs) parlant le plus de langues.
 // Affichez aussi les langues.
+
+
 
 
 //Q5 - withCommonLanguage() : Pays ayant au moins un voisin parlant l’une de ses
@@ -85,8 +100,10 @@ console.log(moreNeighbors());
 //for each function of this file, we add to the html a button to call the function
 
 function getAllFunctions() {
+    console.log("getAllFunctions");
     var myfunctions = [];
     for (var l in this) {
+        console.log(l);
         if (this.hasOwnProperty(l) &&
             this[l] instanceof Function &&
             !/myfunctions/i.test(l)) {
