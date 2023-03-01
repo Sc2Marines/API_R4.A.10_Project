@@ -6,7 +6,7 @@ import fill_db from './Country.js';
 
 
 //c array of class Country (calling method fill_db of file Country.js)
-//let c = fill_db();
+let c = fill_db();
 
 
 
@@ -129,7 +129,7 @@ function addButtons() {
         btn.onclick = functions[i];
         document.body.appendChild(btn);
     }
-    
+
 }
 
 addButtons();
