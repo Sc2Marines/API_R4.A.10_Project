@@ -1,5 +1,5 @@
 class Country {
-    constructor(alpha3Code, area, borderCountries, capital, continent, demonym, flag, name, demography, topLeveLDomains, currencies, langages) {
+    constructor(alpha3Code, area, borderCountries, capital, continent, demonym, flag, name, population, topLeveLDomains, currencies, languages) {
         this.alpha3Code = alpha3Code;
         this.area = area;
         this.borderCountries = borderCountries;
@@ -8,10 +8,10 @@ class Country {
         this.demonym = demonym;
         this.flag = flag;
         this.name = name;
-        this.demography = demography;
+        this.population = population;
         this.topLeveLDomains = topLeveLDomains;
         this.currencies = currencies;
-        this.langages = langages;
+        this.languages = languages;
     }
 
     // getters
@@ -39,8 +39,8 @@ class Country {
     getName() {
         return this.name;
     }
-    getDemography() {
-        return this.demography;
+    getpopulation() {
+        return this.population;
     }
     getTopLevelDomains() {
         return this.topLeveLDomains;
@@ -49,7 +49,7 @@ class Country {
         return this.currencies;
     }
     getLanguages() {
-        return this.langages;
+        return this.languages;
     }
 
     // setters
@@ -77,8 +77,8 @@ class Country {
     setName(name) {
         this.name = name;
     }
-    setDemography(demography) {
-        this.demography = demography;
+    setpopulation(population) {
+        this.population = population;
     }
     setTopLevelDomains(topLeveLDomains) {
         this.topLeveLDomains = topLeveLDomains;
@@ -86,17 +86,38 @@ class Country {
     setCurrencies(currencies) {
         this.currencies = currencies;
     }
-    setLanguages(langages) {
-        this.langages = langages;
+    setLanguages(languages) {
+        this.languages = languages;
     }
 
     // toString method
     toString() {
-        return `Alpha3Code: ${this.alpha3Code}, Area: ${this.area}, BorderCountries: ${this.borderCountries}, Country name: ${this.name}, Capital: ${this.capital}, Continent: ${this.continent}, Demonym: ${this.demonym}, Flag: ${this.flag}, Demography: ${this.demography}, Top Level Domains: ${this.topLeveLDomains}, Currencies: ${this.currencies}, Languages: ${this.langages}`;
+        return `Alpha3Code: ${this.alpha3Code}, Area: ${this.area}, BorderCountries: ${this.borderCountries}, Country name: ${this.name}, Capital: ${this.capital}, Continent: ${this.continent}, Demonym: ${this.demonym}, Flag: ${this.flag}, Population: ${this.population}, Top Level Domains: ${this.topLeveLDomains}, Currencies: ${this.currencies}, Languages: ${this.languages}`;
     }
 
+    //return population density
     getPopDensity() {
-        return this.demography/this.area;
+        let area = this.area;
+        let population = this.population;
+        if (!area || !population) {
+            return null;
+        }
+        return population / area;
+    }
+
+    //return border countries
+    getBorders() {
+        let borders = this.borders;
+        if (!borders) {
+            return null;
+        }
+
+        // create border countries list
+        let borderCountries = borders.map((border) => {
+            let country = countries.find((c) => c.alpha3Code === border);
+            return country;
+        });
+        return borderCountries;
     }
 }
 
@@ -126,7 +147,7 @@ function fill_db() {
             country.topLevelDomain,
             country.currencies,
             country.languages
-          );      
+        );
     });
 
     //add new country into final table
