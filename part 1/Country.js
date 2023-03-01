@@ -114,10 +114,8 @@ class Country {
             return null;
         }
 
-        
-        let countries = Countries.getAll();
-
-        return borders.map(code => countries.find(country => country.alpha3Code === code));
+        let borderCountries = borders.map(borderCode => allCountries.find(country => country.alpha3Code === borderCode));
+        return borderCountries.filter(country => country != null);
     }
 
     //return currencies infos
@@ -168,5 +166,8 @@ function fill_db() {
     //return final table
     return allCountries;
 }
+
+countriesList = fill_db();
+console.log(countriesList);
 
 export default fill_db;
