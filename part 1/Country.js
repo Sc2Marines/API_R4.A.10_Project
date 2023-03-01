@@ -131,26 +131,14 @@ class Country {
     }
 }
 
-//import json file with import
-
-function fill_db() {
-
-    fetch('./countries.json')
-        .then(response => response.json())
-        .then(data => {
-            // Utilisez l'objet JS récupéré ici
-            console.log(data);
-            let countriesJSON = data;
-        });
-
-    
-
-    console.log(countriesJSON);
+function fill_db(json) {
+    console.log("fill_db");
+    console.log(json);
     //initialise final countries table
     let allCountries = {};
 
     //loop travelling each country
-    countriesJSON.forEach(country => {
+    json.forEach(country => {
         //create a new country
         let new_country = new Country(
             country.alpha3Code,
@@ -174,6 +162,15 @@ function fill_db() {
     //return final table
     return allCountries;
 }
+
+//import json file with import
+fetch('./countries.json')
+    .then(response => response.json())
+    .then(data => {
+        // Utilisez l'objet JS récupéré ici
+        //console.log(data);
+        fill_db(data);
+    });
 
 countriesList = fill_db();
 console.log(countriesList);
