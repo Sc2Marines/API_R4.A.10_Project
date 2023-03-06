@@ -17,13 +17,8 @@ class Country {
         this.topLeveLDomains = topLeveLDomains;
         if (currencies != null) {
             let currency =  new Currency();
-            console.log("currencies")
-            console.log(this.name)
-            console.log(currencies);
             for (let i = 0; i < currencies.length; i++) {
-                console.log(currencies[i].code);
-                console.log(currencies[i].name);
-                this.currency.add_currency(currencies[i].code, currencies[i].name);
+                currency.add_currency(currencies[i].code, currencies[i].name);
             }
             this.currencies = currency;
         }
@@ -31,8 +26,17 @@ class Country {
         {
             this.currencies = null;
         }
-        
-        this.languages = languages;
+        if (languages != null) {
+            let language = new Language();
+            for (let i = 0; i < languages.length; i++) {
+                language.add_language(languages[i].iso639_1, languages[i].name);
+            }
+            this.languages = language;
+        }
+        else 
+        {
+            this.languages = null;
+        }
     }
 
     // getters
