@@ -1,4 +1,6 @@
 import json from "./countries.json" assert { type: "json" };
+import Language from "./Language.js";
+import Currency from "./Currency.js";
 
 
 class Country {
@@ -13,7 +15,23 @@ class Country {
         this.name = name;
         this.population = population;
         this.topLeveLDomains = topLeveLDomains;
-        this.currencies = currencies;
+        if (currencies != null) {
+            let currency =  new Currency();
+            console.log("currencies")
+            console.log(this.name)
+            console.log(currencies);
+            for (let i = 0; i < currencies.length; i++) {
+                console.log(currencies[i].code);
+                console.log(currencies[i].name);
+                this.currency.add_currency(currencies[i].code, currencies[i].name);
+            }
+            this.currencies = currency;
+        }
+        else
+        {
+            this.currencies = null;
+        }
+        
         this.languages = languages;
     }
 
@@ -161,12 +179,11 @@ function fill_db() {
 }
 
 const list = fill_db();
-
-//console.log(list); //ok
-//console.log(list["FRA"]); //ok
-//console.log(list["FRA"].getPopDensity()); //ok
-//console.log(list['FRA'].getBorders()); //ok
-//console.log(list['FRA'].getCurrencies()); //ok
-//console.log(list['FRA'].getLanguages()); //ok
+// console.log(list); //ok
+// console.log(list["FRA"]); //ok
+// console.log(list["FRA"].getPopDensity()); //ok
+//console.log(list['FRA'].getBorders());
+// console.log(list['FRA'].getCurrencies());
+console.log(list['FRA'].getLanguages());
 
 export default fill_db;

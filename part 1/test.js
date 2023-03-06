@@ -57,14 +57,11 @@ var MyNameSpace = function () {
     //Q5 - withCommonLanguage() : Pays ayant au moins un voisin parlant l’une de ses
     // langues.Affichez aussi les pays voisins et les langues en question.
 
-
     //Q6 - withoutCommonCurrency() : Pays sans aucun voisin ayant au moins une de ses
     // monnaies.
 
-
     // Q7 - sortingDecreasingDensity() : Pays triés par ordre décroissant de densité de
     // population.
-
     function sortingDecreasingDensity() {
         // Copier le tableau des pays pour ne pas le modifier directement
         let listCountriesCopy = Object.values(listCountries).slice();
