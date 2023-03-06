@@ -129,8 +129,6 @@ class Country {
     //return border countries
     getBorders() {
         let borderCountries = [];
-        console.log("borders: " );
-        console.log(this.borders);
         this.borders.forEach(element => {
             let country = list[element];
             borderCountries.push(country);
@@ -142,29 +140,18 @@ class Country {
 
     // return currencies infos
     getCurrencies() {
-        let currenciesInfos = [];
-        console.log("currencies: " );
-        console.log(this.currencies);
-
-        return currenciesInfos;
+        return this.currencies;
     }
 
     //return languages infos
     getLanguages() {
-        let languagesInfos = [];
-        console.log("languages: " );
-        console.log(this.languages);
-
-        return languagesInfos;
+        return this.languages;
     }
 }
 
 function fill_db() {
     //initialise final countries table
     let allCountries = [];
-    // console.log("json")
-    // //print 10 firsts lines of json
-    // console.log(json.slice(0, 10));
     //loop travelling each country
     json.forEach(country => {  //json is imported at first line
         //create a new country
@@ -196,7 +183,7 @@ const list = fill_db();
 // console.log(list["FRA"]); //ok
 // console.log(list["FRA"].getPopDensity()); //ok
 //console.log(list['FRA'].getBorders());
-console.log(list['FRA'].getCurrencies());
+// console.log(list['FRA'].getCurrencies());
 console.log(list['FRA'].getLanguages());
 
 export default fill_db;

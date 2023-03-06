@@ -214,7 +214,7 @@ var MyNamespace = function () {
 
 function addButtons() {
     let functions = MyNamespace.getAllFunctions();
-    console.log(functions);
+    //console.log(functions);
     for (let i = 0; i < functions.length; i++) {
         let btn = document.createElement("button");
         btn.innerHTML = functions[i].name;
