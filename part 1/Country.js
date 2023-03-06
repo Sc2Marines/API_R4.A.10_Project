@@ -111,28 +111,33 @@ class Country {
     //return border countries
     getBorders() {
         let borderCountries = [];
-
+        console.log("borders: " );
+        console.log(this.borders);
         this.borders.forEach(element => {
-            let new_border_country = countries.find((c) => c.alpha3Code === element);
-            borderCountries.push(new_border_country);
+            let country = list[element];
+            borderCountries.push(country);
         });
 
         return borderCountries;
     }
 
-    //return currencies infos
-    // getCurrencies() {
-    //     let currencies = currencies.map(borderCode => allCountries.find(country => country.alpha3Code === borderCode));
-    //     return currencies.filter(country => country != null);
-    // }
-}
 
-const countries = fill_db();
+    // return currencies infos
+    getCurrencies() {
+        let currenciesInfos = [];
+        console.log("currencies: " );
+        console.log(this.currencies);
+
+        return currenciesInfos;
+    }
+}
 
 function fill_db() {
     //initialise final countries table
     let allCountries = [];
-
+    console.log("json")
+    //print 10 firsts lines of json
+    console.log(json.slice(0, 10));
     //loop travelling each country
     json.forEach(country => {  //json is imported at first line
         //create a new country
@@ -150,7 +155,7 @@ function fill_db() {
             country.currencies,
             country.languages
         );
-
+        //console.log(new_country.toString());
         //add new country into final table
         allCountries[country.alpha3Code] = new_country;
     });
@@ -159,11 +164,11 @@ function fill_db() {
     return allCountries;
 }
 
-let list = fill_db();
-console.log(countries); //ok
-console.log(countries["FRA"]); //ok
-console.log(countries["FRA"].getPopDensity()); //ok
-console.log(countries['FRA'].getBorders());
-console.log(countries['FRA'].getCurrencies());
+const list = fill_db();
+// console.log(list); //ok
+// console.log(list["FRA"]); //ok
+// console.log(list["FRA"].getPopDensity()); //ok
+console.log(list['FRA'].getBorders());
+// console.log(list['FRA'].getCurrencies());
 
 export default fill_db;
