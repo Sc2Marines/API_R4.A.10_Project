@@ -44,6 +44,7 @@ var MyNameSpace = function () {
     // Q7 - sortingDecreasingDensity() : Pays triés par ordre décroissant de densité de
     // population.
     function sortingDecreasingDensity() {
+        console.log("sortingDecreasingDensity");
         // Copier le tableau des pays pour ne pas le modifier directement
         let listCountriesCopy = Object.values(listCountries).slice();
 
@@ -93,6 +94,12 @@ function addButtons() {
         btn.innerHTML = functions[i].name;
         //btn.onclick = functions[i];
         document.body.appendChild(btn);
+    }
+
+    //ajout d'events listeners sur chaque bouton
+    let buttons = document.getElementsByTagName("button");
+    for (let i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener("click", functions[i]);
     }
 }
 
