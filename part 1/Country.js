@@ -188,6 +188,6 @@ const list = fill_db();
 // console.log(list["FRA"].getPopDensity()); //ok
 //console.log(list['FRA'].getBorders());
 // console.log(list['FRA'].getCurrencies());
-console.log(list['FRA'].getLanguages());
+//console.log(list['FRA'].getLanguages());
 
 export default fill_db;

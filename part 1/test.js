@@ -20,30 +20,6 @@ var MyNameSpace = function () {
     //Q1 - outsideTheContinent() : Pays dont au moins un pays frontalier n’est pas dans le
     // même continent.
 
-    // function outsideTheContinent() {
-    //     let countriesOutside = [];
-
-    //     // each country
-    //     for (let countryCode in list) {
-    //         let country = list[countryCode];
-
-    //         // each border country
-    //         let borderCountries = country.getBorders();
-    //         for (let borderCountry of borderCountries) {
-    //             // verifie if border country is in other continent
-    //             if (borderCountry.getContinent() !== country.getContinent()) {
-    //                 // Ajouter le pays courant au tableau des pays trouvés
-    //                 countriesOutside.push(country.getAlpha3Code());
-    //                 // Sortir de la boucle des pays frontaliers si au moins un pays est trouvé
-    //                 break;
-    //             }
-    //         }
-    //     }
-
-    //     // Retourner un tableau des pays dont au moins un voisin est dans un autre continent
-    //     return countriesOutside.map(countryCode => list[countryCode]);
-    // }
-
     // outsideTheContinent();
 
     //Q2 - moreNeighbors() : Pays(possibilité de plusieurs) ayant le plus grand nombre de
