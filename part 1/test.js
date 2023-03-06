@@ -46,6 +46,7 @@ var MyNameSpace = function () {
     // Q7 - sortingDecreasingDensity() : Pays triés par ordre décroissant de densité de
     // population.
     function sortingDecreasingDensity() {
+        console.log("sortingDecreasingDensity");
         // Copier le tableau des pays pour ne pas le modifier directement
         let listCountriesCopy = Object.values(listCountries).slice();
 
@@ -74,6 +75,19 @@ var MyNameSpace = function () {
     }
 
     //Q8 - moreTopLevelDomains() : Pays ayant plusieurs Top Level Domains Internet.
+    function moreTopLevelDomains() {
+        console.log("moreTopLevelDomains");
+        let listCountriesCopy = Object.values(listCountries).slice();
+        let listCountriesWithMoreTopLevelDomains = [];
+
+        for (let i = 0; i < listCountriesCopy.length; i++) {
+            if (listCountriesCopy[i].getTopLevelDomains().length > 1) {
+                listCountriesWithMoreTopLevelDomains.push(listCountriesCopy[i]);
+            }
+        }
+
+        return listCountriesWithMoreTopLevelDomains;
+    }
 
     //Q9 - veryLongTrip(nom_pays) : En partant d’un pays donné(représenté ici par
     // l’argument nom_pays), listez tous les pays que l’on peut visiter en passant de l’un à
@@ -84,7 +98,8 @@ var MyNameSpace = function () {
     return {
         getAllFunctions: getAllFunctions,
         sortingDecreasingDensity: sortingDecreasingDensity,
-        logall: logall
+        logall: logall,
+        moreTopLevelDomains: moreTopLevelDomains
 
     };
 }();
@@ -93,14 +108,37 @@ var MyNameSpace = function () {
 function addButtons() {
     let functions = MyNameSpace.getAllFunctions();
 
-    //console.log(functions);
+    //ajout des boutons
     for (let i = 0; i < functions.length; i++) {
         let btn = document.createElement("button");
         btn.innerHTML = functions[i].name;
-        btn.onclick = functions[i];
+        //btn.onclick = functions[i];
         document.body.appendChild(btn);
     }
 
+    //ajout d'events listeners sur chaque bouton
+    let buttons = document.getElementsByTagName("button");
+    for (let i = 0; i < buttons.length; i++) {
+        //we add the event listener and piccj the result of the function
+        buttons[i].addEventListener("click", function () {
+
+            //we get the result of the function
+            let result = MyNameSpace[buttons[i].innerHTML]();
+
+            //we create a new div to display the result
+            //we create a div with the id = "result" if it doesn't exist
+            let div = document.getElementById("result");
+            if (div == null) {
+                div = document.createElement("div");
+                div.id = "result";
+            }
+            //we display the result
+            div.innerHTML = result;
+            document.body.appendChild(div);
+        });
+
+    }
+    
 }
 
 addButtons();
