@@ -133,10 +133,12 @@ class Country {
     //return border countries
     getBorders() {
         let borderCountries = [];
-        this.borders.forEach(element => {
-            let country = list[element];
-            borderCountries.push(country);
-        });
+        if (this.borders != null) {
+            this.borders.forEach(element => {
+                let country = list[element];
+                borderCountries.push(country);
+            });
+        }
 
         return borderCountries;
     }

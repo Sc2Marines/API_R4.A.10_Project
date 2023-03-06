@@ -24,6 +24,8 @@ var MyNameSpace = function () {
 
     //Q1 - outsideTheContinent() : Pays dont au moins un pays frontalier n’est pas dans le
     // même continent.
+    function outsideTheContinent() {
+    }
 
     // outsideTheContinent();
 
@@ -63,8 +65,12 @@ var MyNameSpace = function () {
         // Trier les pays par ordre décroissant de densité de population
         listCountriesCopy.sort(comparePopulationDensity);
 
+        listCountriesCopy.forEach(element => {
+            
+        });
+
         // Retourner le nouveau tableau trié
-        return countriesCopy;
+        return listCountriesCopy;
     }
 
     //Q8 - moreTopLevelDomains() : Pays ayant plusieurs Top Level Domains Internet.
