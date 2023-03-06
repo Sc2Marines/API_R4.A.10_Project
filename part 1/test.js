@@ -17,6 +17,11 @@ var MyNameSpace = function () {
         return myfunctions;
     }
 
+    function logall() {
+        console.log("success");
+    }
+
+
     //Q1 - outsideTheContinent() : Pays dont au moins un pays frontalier n’est pas dans le
     // même continent.
 
@@ -95,13 +100,17 @@ var MyNameSpace = function () {
 
 
     return {
-        sortingDecreasingDensity: sortingDecreasingDensity
+        getAllFunctions: getAllFunctions,
+        sortingDecreasingDensity: sortingDecreasingDensity,
+        logall: logall
+
     };
 }();
 
 
 function addButtons() {
-    let functions = MyNameSpace.getAllFunctions();
+    let functions = MyNameSpace//getAllFunctions();
+    functions.logall();
     //console.log(functions);
     for (let i = 0; i < functions.length; i++) {
         let btn = document.createElement("button");
