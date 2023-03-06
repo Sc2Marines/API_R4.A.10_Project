@@ -130,6 +130,15 @@ class Country {
 
         return currenciesInfos;
     }
+
+    //return languages infos
+    getLanguages() {
+        let languagesInfos = [];
+        console.log("languages: " );
+        console.log(this.languages);
+
+        return languagesInfos;
+    }
 }
 
 function fill_db() {
@@ -168,7 +177,8 @@ const list = fill_db();
 // console.log(list); //ok
 // console.log(list["FRA"]); //ok
 // console.log(list["FRA"].getPopDensity()); //ok
-console.log(list['FRA'].getBorders());
+//console.log(list['FRA'].getBorders());
 // console.log(list['FRA'].getCurrencies());
+console.log(list['FRA'].getLanguages());
 
 export default fill_db;
