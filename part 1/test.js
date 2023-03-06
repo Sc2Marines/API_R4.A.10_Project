@@ -88,7 +88,7 @@ var MyNameSpace = function () {
         listCountriesCopy.sort(comparePopulationDensity);
 
         // Retourner le nouveau tableau trié
-        return countriesCopy;
+        return listCountriesCopy;
     }
 
     //Q8 - moreTopLevelDomains() : Pays ayant plusieurs Top Level Domains Internet.
@@ -111,14 +111,13 @@ var MyNameSpace = function () {
 function addButtons() {
     let functions = MyNameSpace.getAllFunctions();
 
-    //console.log(functions);
+    //ajout des boutons
     for (let i = 0; i < functions.length; i++) {
         let btn = document.createElement("button");
         btn.innerHTML = functions[i].name;
-        btn.onclick = functions[i];
+        //btn.onclick = functions[i];
         document.body.appendChild(btn);
     }
-
 }
 
 addButtons();
