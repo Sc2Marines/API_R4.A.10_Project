@@ -109,8 +109,8 @@ var MyNameSpace = function () {
 
 
 function addButtons() {
-    let functions = MyNameSpace//getAllFunctions();
-    functions.logall();
+    let functions = MyNameSpace.getAllFunctions();
+
     //console.log(functions);
     for (let i = 0; i < functions.length; i++) {
         let btn = document.createElement("button");
