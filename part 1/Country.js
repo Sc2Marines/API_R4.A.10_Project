@@ -1,4 +1,6 @@
 import json from "./countries.json" assert { type: "json" };
+import Language from "./Language.js";
+import Currency from "./Currency.js";
 
 
 class Country {
@@ -13,7 +15,23 @@ class Country {
         this.name = name;
         this.population = population;
         this.topLeveLDomains = topLeveLDomains;
-        this.currencies = currencies;
+        if (currencies != null) {
+            let currency =  new Currency();
+            console.log("currencies")
+            console.log(this.name)
+            console.log(currencies);
+            for (let i = 0; i < currencies.length; i++) {
+                console.log(currencies[i].code);
+                console.log(currencies[i].name);
+                this.currency.add_currency(currencies[i].code, currencies[i].name);
+            }
+            this.currencies = currency;
+        }
+        else
+        {
+            this.currencies = null;
+        }
+        
         this.languages = languages;
     }
 
@@ -144,9 +162,9 @@ class Country {
 function fill_db() {
     //initialise final countries table
     let allCountries = [];
-    console.log("json")
-    //print 10 firsts lines of json
-    console.log(json.slice(0, 10));
+    // console.log("json")
+    // //print 10 firsts lines of json
+    // console.log(json.slice(0, 10));
     //loop travelling each country
     json.forEach(country => {  //json is imported at first line
         //create a new country
@@ -178,7 +196,7 @@ const list = fill_db();
 // console.log(list["FRA"]); //ok
 // console.log(list["FRA"].getPopDensity()); //ok
 //console.log(list['FRA'].getBorders());
-// console.log(list['FRA'].getCurrencies());
+console.log(list['FRA'].getCurrencies());
 console.log(list['FRA'].getLanguages());
 
 export default fill_db;

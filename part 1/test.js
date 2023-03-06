@@ -88,23 +88,110 @@ var MyNamespace = function () {
 
     //Q4 - moreLanguages() : Pays(possibilité de plusieurs) parlant le plus de langues.
     // Affichez aussi les langues.
+    function moreLanguages() {
+        let countries = [];
+        let max = 0;
+        for (let i = 0; i < c.length; i++) {
+            let country = c[i];
+            let languages = country.getLanguages;
+            if (languages.length > max) {
+                max = languages.length;
+                countries = [country, languages];
+            }
+            else if (languages.length == max) {
+                countries.push([country, languages]);
+            }
+        }
+        return countries;
+    }
 
 
 
 
     //Q5 - withCommonLanguage() : Pays ayant au moins un voisin parlant l’une de ses
     // langues.Affichez aussi les pays voisins et les langues en question.
-
+    function withCommonLanguage() {
+        let countries = [];
+        for (let i = 0; i < c.length; i++) {
+            let country = c[i];
+            let languages = country.getLanguages;
+            let borders = country.getBorderCountries;
+            for (let j = 0; j < borders.length; j++) {
+                let border_country = borders[j];
+                let border_languages = border_country.getLanguages;
+                for (let k = 0; k < languages.length; k++) {
+                    let language = languages[k];
+                    if (border_languages.includes(language)) {
+                        countries.push([country, border_country, language]);
+                        break;
+                    }
+                }
+            }
+        }
+        return countries;
+    }
 
     //Q6 - withoutCommonCurrency() : Pays sans aucun voisin ayant au moins une de ses
     // monnaies.
+    function withoutCommonCurrency() {
+        let countries = [];
+        for (let i = 0; i < c.length; i++) {
+            let country = c[i];
+            let currencies = country.getCurrencies;
+            let borders = country.getBorderCountries;
+            let hasCommonCurrency = false;
+            for (let j = 0; j < borders.length; j++) {
+                let border_country = borders[j];
+                let border_currencies = border_country.getCurrencies;
+                for (let k = 0; k < currencies.length; k++) {
+                    let currency = currencies[k];
+                    if (border_currencies.includes(currency)) {
+                        hasCommonCurrency = true;
+                        break;
+                    }
+                }
+            }
+            if (!hasCommonCurrency) {
+                countries.push(country);
+            }
+        }
+        return countries;
+    }
+
 
 
     // Q7 - sortingDecreasingDensity() : Pays triés par ordre décroissant de densité de
     // population.
+    function sortingDecreasingDensity() {
+        let countries = [];
+        for (let i = 0; i < c.length; i++) {
+            let country = c[i];
+            let population = country.getPopulation;
+            let area = country.getArea;
+            let density = population / area;
+            countries.push([country, density]);
+        }
+        countries.sort(function (a, b) {
+            return b[1] - a[1];
+        });
+        return countries;
+    }
 
 
     //Q8 - moreTopLevelDomains() : Pays ayant plusieurs Top Level Domains Internet.
+
+    function moreTopLevelDomains() {
+        let countries = [];
+        for (let i = 0; i < c.length; i++) {
+            let country = c[i];
+            let domains = country.getTopLevelDomains;
+            if (domains.length > 1) {
+                countries.push(country);
+            }
+        }
+        return countries;
+    }
+
 
 
     //Q9 - veryLongTrip(nom_pays) : En partant d’un pays donné(représenté ici par
@@ -116,6 +203,11 @@ var MyNamespace = function () {
         , outsideTheContinent: outsideTheContinent
         , moreNeighbors: moreNeighbors
         , neighborless: neighborless
+        , moreLanguages: moreLanguages
+        , withCommonLanguage: withCommonLanguage
+        , withoutCommonCurrency: withoutCommonCurrency
+        , sortingDecreasingDensity: sortingDecreasingDensity
+        , moreTopLevelDomains: moreTopLevelDomains
     };
 }();
 
