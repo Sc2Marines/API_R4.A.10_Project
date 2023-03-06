@@ -21,16 +21,85 @@ var MyNameSpace = function () {
         console.log("success");
     }
 
-
     //Q1 - outsideTheContinent() : Pays dont au moins un pays frontalier n’est pas dans le
     // même continent.
     function outsideTheContinent() {
+        let res = [];
+
+        // copie de listCountries
+        let listCountriesCopy = Object.values(listCountries).slice();
+
+        // parcours la liste des pays
+        for (let i = 0; i < listCountriesCopy.length; i++) {
+
+            // les informations intéressante du pays
+            let country = listCountriesCopy[i];
+            let continent = country.getContinent();
+            let listBorders = country.getBorders();
+
+            // pour tous les borders
+            listBorders.forEach(element => {
+
+                // verifie que le pays a des borders
+                if (element != null && element.continent !== undefined) {
+
+                    //si le continent du pays frontalier n'est pas le même que celui du pays
+                    if (element.continent != continent) {
+                        res.push(country);
+                    }
+                }
+            });
+        }
+        return res;
     }
 
-    // outsideTheContinent();
-
     //Q2 - moreNeighbors() : Pays(possibilité de plusieurs) ayant le plus grand nombre de
-    // voisins.Affichez aussi les voisins.
+    // voisins. Affichez aussi les voisins.
+    function moreNeighbors() {
+        // Initialisation des variables de comptage et de stockage des pays ayant le plus de voisins
+        let maxNeighborCount = 0;
+        let countriesWithMaxNeighbors = [];
+
+        // Parcours de tous les pays de la liste
+        for (let countryCode in listCountries) {
+            let country = listCountries[countryCode];
+            let neighbors = country.getBorders();
+
+            // Vérification si le pays a plus de voisins que les précédents pays parcourus
+            if (neighbors && neighbors.length > maxNeighborCount) {
+                maxNeighborCount = neighbors.length;
+                countriesWithMaxNeighbors = [country];
+            } else if (neighbors && neighbors.length == maxNeighborCount) {
+                countriesWithMaxNeighbors.push(country);
+            }
+        }
+
+        // Affichage des pays ayant le plus de voisins et de leurs voisins respectifs
+        console.log(`Countries with the most neighbors (${maxNeighborCount}):`);
+
+        countriesWithMaxNeighbors.forEach(country => {
+            console.log("Pays ayant le plus de voisins :");
+            console.log(country.name);
+
+            // Vérification si le pays a des voisins
+            if (country.borders && country.borders.length > 0) {
+                console.log(`  ${country.borders.length} neighbors:`);
+                country.borders.forEach(element => {
+                    // Vérification si l'élément est défini et a une propriété name
+                    if (listCountries[element] != null && listCountries[element].name !== undefined) {
+                        console.log(`    - ${listCountries[element].name}`);
+                    } else {
+                        console.log(`    - ${element} (Ce code alpha 3 n'est pas associé à un pays)`);
+                    }
+                });
+            } else {
+                console.log(`  No neighbors.`);
+            }
+        });
+
+        // Retourne les pays ayant le plus de voisins
+        return countriesWithMaxNeighbors;
+    }
 
     //Q3 - neighborless() : Pays n’ayant aucun voisin.
 
@@ -66,10 +135,6 @@ var MyNameSpace = function () {
         // Trier les pays par ordre décroissant de densité de population
         listCountriesCopy.sort(comparePopulationDensity);
 
-        listCountriesCopy.forEach(element => {
-            
-        });
-
         // Retourner le nouveau tableau trié
         return listCountriesCopy;
     }
@@ -97,6 +162,8 @@ var MyNameSpace = function () {
 
     return {
         getAllFunctions: getAllFunctions,
+        outsideTheContinent: outsideTheContinent,
+        moreNeighbors: moreNeighbors,
         sortingDecreasingDensity: sortingDecreasingDensity,
         logall: logall,
         moreTopLevelDomains: moreTopLevelDomains
@@ -138,7 +205,7 @@ function addButtons() {
         });
 
     }
-    
+
 }
 
 addButtons();

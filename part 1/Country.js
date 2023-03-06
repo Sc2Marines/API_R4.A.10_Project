@@ -166,7 +166,7 @@ function fill_db() {
             country.area,
             country.borders,
             country.capital,
-            country.region,
+            country.continent,
             country.demonym,
             country.flags,
             country.name,
