@@ -146,8 +146,6 @@ class Country {
 
     // return currencies infos
     getCurrencies() {
-        console.log("getCurrencies")
-        console.log(this.currencies)
         //if there is no currency
         if (this.currencies == null) {
             return null;

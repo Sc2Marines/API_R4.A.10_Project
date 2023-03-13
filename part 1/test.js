@@ -250,35 +250,48 @@ var MyNameSpace = function () {
         return html;
     }
 
-    //Q6 - withoutCommonCurrency() : Pays, sans aucun voisin ayant au moins une de ses
-    // monnaies.
+    //Q6 - withoutCommonCurrency() : Pays, sans aucun voisin ayant au moins une de ses monnaies.
     function withoutCommonCurrency()
     {
         let listCountriesCopy = Object.values(listCountries).slice();
         let listCountriesWithoutCommonCurrency = [];
-        let compteur = 0;
+        let count = 0;
 
         for (let i = 0; i < listCountriesCopy.length; i++) {
-            let country = listCountriesCopy[i];
-            let currencies = country.getCurrencies();
-            let borders = country.getBorders();
 
-            let hasCommonCurrency = false;
+            let dico = {};
+            let country = listCountriesCopy[i];
+            if (country.getCurrencies() == null) {
+                continue;
+            }
+            let currencies = country.getCurrencies().get_all_currencies();
+            console.log(currencies)
+            let borders = country.getBorders();
+            //we add the country as a key in the dico
+            dico[country.name] = [];
+
+            let hasCommonCurrencies = false;
 
             for (let j = 0; j < borders.length; j++) {
                 let border = borders[j];
                 if (border == null) {
                     continue;
                 }
-                else 
-                {
-                    if (border.getCurrencies() != null) {
-                        let borderCurrencies = border.getCurrencies();
-                        for (let k = 0; k < currencies.length; k++) {
-                            let currency = currencies[k];
-
-                            if (borderCurrencies.includes(currency)) {
-                                hasCommonCurrency = true;
+                else {
+                    if (border.getCurrencies()!= null) {
+                        let borderCurrencies = border.getCurrencies().get_all_currencies();
+                        console.log(borderCurrencies)
+                        //for each key in borderLanguages
+                        for (let key in borderCurrencies) {
+                            //if the key is in languages
+                            if (key in currencies) {
+                                hasCommonCurrencies = true;
+                                
+                                break;
+                            }
+                            else 
+                            {
+                                dico[country.name].push(border);
                                 break;
                             }
                         }
@@ -289,13 +302,41 @@ var MyNameSpace = function () {
                 }
             }
 
-            if (!hasCommonCurrency) {
-                listCountriesWithoutCommonCurrency.push(country);
-                compteur++;
+            if (!hasCommonCurrencies) {
+                listCountriesWithoutCommonCurrency.push(dico);
+                count++;
             }
         }
-        // console.log("count"+compteur);
-        return listCountriesWithoutCommonCurrency;
+
+        let html = "";
+        //get all the keys of the dico
+        for (let i = 0; i < listCountriesWithoutCommonCurrency.length; i++) {
+            let dico = listCountriesWithoutCommonCurrency[i];
+            let keys = Object.keys(dico);
+            //print the type of the key
+            let country = keys[0];
+            let neighbors = dico[country];
+
+            console.log("Pays sans aucun voisin ayant au moins une de ses monnaies : " + country);
+            html += country + "<br>";
+            // Checking if the country has neighbors
+            if (neighbors.length > 0) {
+                neighbors.forEach(element => {
+                    // Checking if the element is defined and has a name property
+                    if (element != null && element.name !== undefined) {
+                        console.log(`    - ${element.name}`);
+                        html += '&nbsp;&nbsp;&nbsp;-' + element.name + "<br>";
+                    } else {
+                        console.log(`    - ${element} (Ce code alpha 3 n'est pas associé à un pays)`);
+                    }
+                });
+            } else {
+                console.log(`  No neighbors.`);
+            }
+        }
+
+        console.log("count" + count);
+        return html;
     }
 
     // Q7 - sortingDecreasingDensity() : Pays triés par ordre décroissant de densité de
