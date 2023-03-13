@@ -4,12 +4,12 @@ import Currency from "./Currency.js";
 
 
 class Country {
-    constructor(alpha3Code, area, borders, capital, continent, demonym, flags, name, population, topLeveLDomains, currencies, languages) {
+    constructor(alpha3Code, area, borders, capital, region, demonym, flags, name, population, topLeveLDomains, currencies, languages) {
         this.alpha3Code = alpha3Code;
         this.area = area;
         this.borders = borders;
         this.capital = capital;
-        this.continent = continent;
+        this.region = region;
         this.demonym = demonym;
         this.flags = flags;
         this.name = name;
@@ -52,8 +52,8 @@ class Country {
     getCapital() {
         return this.capital;
     }
-    getContinent() {
-        return this.continent;
+    getRegion() {
+        return this.region;
     }
     getDemonym() {
         return this.demonym;
@@ -90,8 +90,8 @@ class Country {
     setCapital(capital) {
         this.capital = capital;
     }
-    setContinent(continent) {
-        this.continent = continent;
+    setRegion(region) {
+        this.region = region;
     }
     setDemonym(demonym) {
         this.demonym = demonym;
@@ -117,7 +117,7 @@ class Country {
 
     // toString method
     toString() {
-        return `Alpha3Code: ${this.alpha3Code}, Area: ${this.area}, borders: ${this.borders}, Country name: ${this.name}, Capital: ${this.capital}, Continent: ${this.continent}, Demonym: ${this.demonym}, flags: ${this.flags}, Population: ${this.population}, Top Level Domains: ${this.topLeveLDomains}, Currencies: ${this.currencies}, Languages: ${this.languages}`;
+        return `Alpha3Code: ${this.alpha3Code}, Area: ${this.area}, borders: ${this.borders}, Country name: ${this.name}, Capital: ${this.capital}, region: ${this.region}, Demonym: ${this.demonym}, flags: ${this.flags}, Population: ${this.population}, Top Level Domains: ${this.topLeveLDomains}, Currencies: ${this.currencies}, Languages: ${this.languages}`;
     }
 
     //return population density
@@ -166,7 +166,7 @@ function fill_db() {
             country.area,
             country.borders,
             country.capital,
-            country.continent,
+            country.region,
             country.demonym,
             country.flags,
             country.name,

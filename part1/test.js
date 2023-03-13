@@ -24,28 +24,28 @@ var MyNameSpace = function () {
     //Q1 - outsideTheContinent() : Pays dont au moins un pays frontalier n’est pas dans le
     // même continent.
     function outsideTheContinent() {
-        let outsideTheContinent = [];
+        let outsideTheRegion = [];
 
         // Course of all the countries of the list
         for (let theCountry in listCountries) {
             // interesting information
             let country = listCountries[theCountry];
-            let continent = country.getContinent();
+            let continent = country.getRegion();
             let listBorders = country.getBorders();
 
             // foreach borders
             listBorders.forEach(element => {
                 // check if the country has borders
-                if (element != null && element.continent !== undefined) {
+                if (element != null && element.region !== undefined) {
 
                     //if border's continent not the same, push in the result list
-                    if (element.continent != continent) {
-                        outsideTheContinent.push(country);
+                    if (element.region != continent) {
+                        outsideTheRegion.push(country);
                     }
                 }
             });
         }
-        return outsideTheContinent;
+        return outsideTheRegion;
     }
 
     //Q2 - moreNeighbors() : Pays(possibilité de plusieurs) ayant le plus grand nombre de
