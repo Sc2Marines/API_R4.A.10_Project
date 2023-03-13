@@ -173,8 +173,130 @@ var MyNameSpace = function () {
     //Q5 - withCommonLanguage() : Pays ayant au moins un voisin parlant l’une de ses
     // langues.Affichez aussi les pays voisins et les langues en question.
 
-    //Q6 - withoutCommonCurrency() : Pays sans aucun voisin ayant au moins une de ses
+    function withCommonLanguage() {
+        let listCountriesCopy = Object.values(listCountries).slice();
+        let listCountriesWithCommonLanguage = [];
+        let count = 0;
+
+        for (let i = 0; i < listCountriesCopy.length; i++) {
+            
+            let dico = {};
+            let country = listCountriesCopy[i];
+            let languages = country.getLanguages().get_all_languages();
+            let borders = country.getBorders();
+            //we add the country as a key in the dico
+            dico[country.name] = [];
+
+            let hasCommonLanguage = false;
+
+            for (let j = 0; j < borders.length; j++) {
+                let border = borders[j];
+                if (border == null) {
+                    continue;
+                }
+                else 
+                {
+                    if (border.getLanguages() != null) {
+                        let borderLanguages = border.getLanguages().get_all_languages();
+                        //for each key in borderLanguages
+                        for (let key in borderLanguages) {
+                            //if the key is in languages
+                            if (key in languages) {
+                                hasCommonLanguage = true;
+                                dico[country.name].push(border);
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        continue;
+                    }
+                }
+            }
+
+            if (hasCommonLanguage) {
+                listCountriesWithCommonLanguage.push(dico);
+                count++;
+            }
+        }
+
+        let html = "";
+        //get all the keys of the dico
+        for (let i = 0; i < listCountriesWithCommonLanguage.length; i++) {
+            let dico = listCountriesWithCommonLanguage[i];
+            let keys = Object.keys(dico);
+            //print the type of the key
+            let country = keys[0];
+            let neighbors = dico[country];
+            
+            console.log("Pays ayant au moins un voisin parlant l'une de ses langues : " + country);
+            html += country + "<br>";
+            // Checking if the country has neighbors
+            if (neighbors.length > 0) {
+                neighbors.forEach(element => {
+                    // Checking if the element is defined and has a name property
+                    if (element != null && element.name !== undefined) {
+                        console.log(`    - ${element.name}`);
+                        html += '&nbsp;&nbsp;&nbsp;-' + element.name + "<br>";
+                    } else {
+                        console.log(`    - ${element} (Ce code alpha 3 n'est pas associé à un pays)`);
+                    }
+                });
+            } else {
+                console.log(`  No neighbors.`);
+            }
+        }
+        console.log("Nombre de pays : " + count);
+        return html;
+    }
+
+    //Q6 - withoutCommonCurrency() : Pays, sans aucun voisin ayant au moins une de ses
     // monnaies.
+    function withoutCommonCurrency()
+    {
+        let listCountriesCopy = Object.values(listCountries).slice();
+        let listCountriesWithoutCommonCurrency = [];
+        let compteur = 0;
+
+        for (let i = 0; i < listCountriesCopy.length; i++) {
+            let country = listCountriesCopy[i];
+            let currencies = country.getCurrencies();
+            let borders = country.getBorders();
+
+            let hasCommonCurrency = false;
+
+            for (let j = 0; j < borders.length; j++) {
+                let border = borders[j];
+                if (border == null) {
+                    continue;
+                }
+                else 
+                {
+                    if (border.getCurrencies() != null) {
+                        let borderCurrencies = border.getCurrencies();
+                        for (let k = 0; k < currencies.length; k++) {
+                            let currency = currencies[k];
+
+                            if (borderCurrencies.includes(currency)) {
+                                hasCommonCurrency = true;
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        continue;
+                    }
+                }
+            }
+
+            if (!hasCommonCurrency) {
+                listCountriesWithoutCommonCurrency.push(country);
+                compteur++;
+            }
+        }
+        // console.log("count"+compteur);
+        return listCountriesWithoutCommonCurrency;
+    }
 
     // Q7 - sortingDecreasingDensity() : Pays triés par ordre décroissant de densité de
     // population.
@@ -232,8 +354,9 @@ var MyNameSpace = function () {
         moreLanguages: moreLanguages,
         sortingDecreasingDensity: sortingDecreasingDensity,
         logall: logall,
-        moreTopLevelDomains: moreTopLevelDomains
-
+        moreTopLevelDomains: moreTopLevelDomains,
+        withoutCommonCurrency: withoutCommonCurrency,
+        withCommonLanguage: withCommonLanguage
     };
 }();
 
