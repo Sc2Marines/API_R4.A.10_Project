@@ -24,68 +24,67 @@ var MyNameSpace = function () {
     //Q1 - outsideTheContinent() : Pays dont au moins un pays frontalier n’est pas dans le
     // même continent.
     function outsideTheContinent() {
-        let res = [];
+        let outsideTheContinent = [];
 
-        // copie de listCountries
-        let listCountriesCopy = Object.values(listCountries).slice();
-
-        // parcours la liste des pays
-        for (let i = 0; i < listCountriesCopy.length; i++) {
-
-            // les informations intéressante du pays
-            let country = listCountriesCopy[i];
+        // Course of all the countries of the list
+        for (let theCountry in listCountries) {
+            // interesting information
+            let country = listCountries[theCountry];
             let continent = country.getContinent();
             let listBorders = country.getBorders();
 
-            // pour tous les borders
+            // foreach borders
             listBorders.forEach(element => {
-
-                // verifie que le pays a des borders
+                // check if the country has borders
                 if (element != null && element.continent !== undefined) {
 
-                    //si le continent du pays frontalier n'est pas le même que celui du pays
+                    //if border's continent not the same, push in the result list
                     if (element.continent != continent) {
-                        res.push(country);
+                        outsideTheContinent.push(country);
                     }
                 }
             });
         }
-        return res;
+        return outsideTheContinent;
     }
 
     //Q2 - moreNeighbors() : Pays(possibilité de plusieurs) ayant le plus grand nombre de
     // voisins. Affichez aussi les voisins.
     function moreNeighbors() {
-        // Initialisation des variables de comptage et de stockage des pays ayant le plus de voisins
-        let maxNeighborCount = 0;
+        // Initialization of the counting and storage variables
+        let maxNeighborsCount = 0;
         let countriesWithMaxNeighbors = [];
 
-        // Parcours de tous les pays de la liste
-        for (let countryCode in listCountries) {
-            let country = listCountries[countryCode];
+        // Course of all the countries of the list
+        for (let theCountry in listCountries) {
+            let country = listCountries[theCountry];
             let neighbors = country.getBorders();
 
-            // Vérification si le pays a plus de voisins que les précédents pays parcourus
-            if (neighbors && neighbors.length > maxNeighborCount) {
-                maxNeighborCount = neighbors.length;
-                countriesWithMaxNeighbors = [country];
-            } else if (neighbors && neighbors.length == maxNeighborCount) {
+            // Check if the country has more neighbors than the previous countries browsed and update the max
+            if (neighbors && neighbors.length > maxNeighborsCount) {
+                maxNeighborsCount = neighbors.length;
+            }
+        }
+
+        // Course of all the countries of the list
+        for (let theCountry in listCountries) {
+            let country = listCountries[theCountry];
+            let neighbors = country.getBorders();
+
+            // Checking if the country has the same number of neighbors as the max
+            if (neighbors && neighbors.length == maxNeighborsCount) {
                 countriesWithMaxNeighbors.push(country);
             }
         }
 
-        // Affichage des pays ayant le plus de voisins et de leurs voisins respectifs
-        console.log(`Countries with the most neighbors (${maxNeighborCount}):`);
-
+        // Display of the countries with the most neighbors and their respective neighbors
         countriesWithMaxNeighbors.forEach(country => {
-            console.log("Pays ayant le plus de voisins :");
-            console.log(country.name);
+            console.log("Pays ayant le plus de voisins : "+country.name+ " avec "+maxNeighborsCount+" voisins.");
 
-            // Vérification si le pays a des voisins
+            // Checking if the country has neighbors
             if (country.borders && country.borders.length > 0) {
-                console.log(`  ${country.borders.length} neighbors:`);
                 country.borders.forEach(element => {
-                    // Vérification si l'élément est défini et a une propriété name
+                    // Checking if the element is defined and has a name property
                     if (listCountries[element] != null && listCountries[element].name !== undefined) {
                         console.log(`    - ${listCountries[element].name}`);
                     } else {
@@ -97,14 +96,79 @@ var MyNameSpace = function () {
             }
         });
 
-        // Retourne les pays ayant le plus de voisins
+        // Returns the countries with the most neighbors
         return countriesWithMaxNeighbors;
     }
 
     //Q3 - neighborless() : Pays n’ayant aucun voisin.
+    function neighborless() {
+        let listNeighborless = [];
+        
+        //Course of all the countries of the list
+        for (let theCountry in listCountries) {
+            let country = listCountries[theCountry];
+            let neighbors = country.getBorders();
+
+            // Checking if the country has no neighbors
+            if (neighbors.length == 0) {
+                // add it to the list of countries with no neighbors
+                listNeighborless.push(country);
+            }
+        }
+
+        return listNeighborless;
+    }
 
     //Q4 - moreLanguages() : Pays(possibilité de plusieurs) parlant le plus de langues.
     // Affichez aussi les langues.
+    function moreLanguages() {
+        // Initialization of language counting and storage variables
+        let maxLanguagesCount = 0;
+        let countriesWithMaxLanguages = [];
+
+        // Course of all the countries of the list
+        for (let theCountry in listCountries) {
+            // for each country, give the number of languages
+            let country = listCountries[theCountry];
+            let languages = country.getLanguages();
+            let keys = Object.keys(languages.all_languages);
+            let taille = keys.length;
+
+            // Check if the country has more languages ​​than the previous countries browsed and update the max size
+            if (taille > maxLanguagesCount) {
+                maxLanguagesCount = taille;
+            } 
+        }
+
+        // look again to find out which countries correspond to the maximum size
+        for (let theCountry in listCountries) {
+            let country = listCountries[theCountry];
+            let languages = country.getLanguages();
+            let keys = Object.keys(languages.all_languages);
+            let taille = keys.length;
+
+            if (taille == maxLanguagesCount) {
+                countriesWithMaxLanguages.push(country);
+            }
+        }
+
+        // Display of the countries with the most languages ​​and their respective languages
+        countriesWithMaxLanguages.forEach(country => {
+            console.log("Pays ayant le plus de langues : "+country.name+ " avec "+maxLanguagesCount+" langues.");
+
+            // Checking if the country has languages
+            if (maxLanguagesCount > 0) {
+                for (var key in country.languages.all_languages) {
+                    console.log(`    - ${country.languages.all_languages[key]}`);
+                }
+            } else {
+                console.log(`  Pas de langues.`);
+            }
+        });
+
+        // Returns the countries with the most neighbors
+        return countriesWithMaxLanguages;
+    }
 
     //Q5 - withCommonLanguage() : Pays ayant au moins un voisin parlant l’une de ses
     // langues.Affichez aussi les pays voisins et les langues en question.
@@ -268,6 +332,8 @@ var MyNameSpace = function () {
         getAllFunctions: getAllFunctions,
         outsideTheContinent: outsideTheContinent,
         moreNeighbors: moreNeighbors,
+        neighborless: neighborless,
+        moreLanguages: moreLanguages,
         sortingDecreasingDensity: sortingDecreasingDensity,
         logall: logall,
         moreTopLevelDomains: moreTopLevelDomains,
