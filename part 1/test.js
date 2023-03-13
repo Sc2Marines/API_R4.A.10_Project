@@ -176,14 +176,16 @@ var MyNameSpace = function () {
     function withCommonLanguage() {
         let listCountriesCopy = Object.values(listCountries).slice();
         let listCountriesWithCommonLanguage = [];
+        let count = 0;
 
         for (let i = 0; i < listCountriesCopy.length; i++) {
+            
             let dico = {};
             let country = listCountriesCopy[i];
             let languages = country.getLanguages().get_all_languages();
             let borders = country.getBorders();
             //we add the country as a key in the dico
-            dico[country] = [];
+            dico[country.name] = [];
 
             let hasCommonLanguage = false;
 
@@ -201,7 +203,7 @@ var MyNameSpace = function () {
                             //if the key is in languages
                             if (key in languages) {
                                 hasCommonLanguage = true;
-                                dico[country].push(border);
+                                dico[country.name].push(border);
                                 break;
                             }
                         }
@@ -214,22 +216,38 @@ var MyNameSpace = function () {
 
             if (hasCommonLanguage) {
                 listCountriesWithCommonLanguage.push(dico);
+                count++;
             }
         }
 
-        //return listCountriesWithCommonLanguage;
-        // convert the dico to a string for display in html
-        let res = "";
+        let html = "";
+        //get all the keys of the dico
         for (let i = 0; i < listCountriesWithCommonLanguage.length; i++) {
-            let country = Object.keys(listCountriesWithCommonLanguage[i])[0];
-            console.log(country);
-            let borders = listCountriesWithCommonLanguage[i][country];
-            res += country + " has a common language with : <br>";
-            for (let j = 0; j < borders.length; j++) {
-                res += borders[j].name + "<br>";
+            let dico = listCountriesWithCommonLanguage[i];
+            let keys = Object.keys(dico);
+            //print the type of the key
+            let country = keys[0];
+            let neighbors = dico[country];
+            
+            console.log("Pays ayant au moins un voisin parlant l'une de ses langues : " + country);
+            html += country + "<br>";
+            // Checking if the country has neighbors
+            if (neighbors.length > 0) {
+                neighbors.forEach(element => {
+                    // Checking if the element is defined and has a name property
+                    if (element != null && element.name !== undefined) {
+                        console.log(`    - ${element.name}`);
+                        html += '&nbsp;&nbsp;&nbsp;-' + element.name + "<br>";
+                    } else {
+                        console.log(`    - ${element} (Ce code alpha 3 n'est pas associé à un pays)`);
+                    }
+                });
+            } else {
+                console.log(`  No neighbors.`);
             }
         }
-        return res;
+        console.log("Nombre de pays : " + count);
+        return html;
     }
 
     //Q6 - withoutCommonCurrency() : Pays, sans aucun voisin ayant au moins une de ses
@@ -276,7 +294,7 @@ var MyNameSpace = function () {
                 compteur++;
             }
         }
-        console.log("count"+compteur);
+        // console.log("count"+compteur);
         return listCountriesWithoutCommonCurrency;
     }
 
