@@ -10,7 +10,7 @@ function fillTable() {
     for (let theCountry in listCountries) {
         let country = listCountries[theCountry];
 
-        let tableau = document.querySelector('table');
+        let tableau = document.querySelector('.lesPays');
 
         // insérer une nouvelle ligne
         let nouvelleLigne = tableau.insertRow();

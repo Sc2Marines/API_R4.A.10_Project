@@ -1,4 +1,4 @@
-table {
+.lesPays, .detailsPays table {
     border-collapse: collapse;
     width: 100%;
 }
@@ -9,12 +9,52 @@ th, td {
     text-align: left;
 }
 
-th {
+.lesPays th {
     background-color: #4CAF50;
     color: white;
 }
 
-img {
+.lesPays img {
     height: auto;
     max-height: 50px;
+}
+
+.detailsPays th {
+    color: white;
+    background-color: rgb(255, 70, 70);
+}
+
+.detailsPays table {
+    display: none;
+    position: absolute;
+    width: 80%;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.detailsPays table td {
+    background-color: white;
+}
+
+.closeButton {
+    display: none;
+    position: absolute;
+    top: 24%;
+    right: 6%;
+    border-radius: 40px;
+    background-color: rgb(255, 70, 70);
+    cursor: pointer;
+    padding: .2em;
+    border: solid 1px black;
+}
+
+.drapeauGrand {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 20em;
+    width: auto;
 }
