@@ -1,9 +1,23 @@
-import Country from "../part1/Country.js";
-import Currenciy from "../part1/Currency.js";
 import fill_db from "../part1/Country.js";
 
+// variable de saut pour la pagination
+const saut = 25;
+
+// valeurs initiales pour affichage
+var deb = 0;
+var fin = saut;
+
 //listCountries array of class Country (calling method fill_db of file Country.js)
-let listCountries = fill_db();
+var listCountries = fill_db();
+
+// affiche les pays
+fillTable(deb, fin);
+
+// event listener
+var table = document.querySelectorAll('.lesPays td:not(.tdImg)');
+var closeBtn = document.querySelector('.closeButton');
+var previousButtons = document.querySelectorAll('.previous-button');
+var nextButtons = document.querySelectorAll('.next-button');
 
 function fillTable(start, end) {
     var count = 0;
@@ -63,21 +77,57 @@ function fillTable(start, end) {
     }
 }
 
-// variable de saut pour la pagination
-const saut = 25;
+// les boutons SUIV
+nextButtons.forEach(nextButton => {
+    nextButton.addEventListener('click', () => {
 
-// valeurs initiales pour affichage
-var deb = 0;
-var fin = saut;
+        //remonte en haut de la page
+        window.scrollTo(0, 0);
 
-// affiche les pays
-fillTable(deb, fin);
+        // nouvelle selection de pays
+        deb = deb + saut;
+        fin = fin + saut;
 
-// selectionne les boutons SUIV et PREC
-var previousButtons = document.querySelectorAll('.previous-button');
-var nextButtons = document.querySelectorAll('.next-button');
+        // les numéros de page
+        let pageNumber = document.querySelectorAll('.page-number');
 
-// boutons SUIV
+        // Ajoute 1 aux numéros de page
+        pageNumber.forEach(element => {
+            let pageNumberText = element.textContent;
+            let pageNumberArray = pageNumberText.split(' '); // diviser le texte en un tableau de chaînes de caractères, séparées par un espace
+            let dernier = parseInt(pageNumberArray[pageNumberArray.length - 1]); // accéder au dernier élément du tableau et le convertir en un nombre entier  
+            element.textContent = 'Page ' + (dernier + 1);
+        });
+
+        // active les boutons PREC
+        previousButtons.forEach(element => {
+            element.disabled = false;
+        });
+
+        // désactive les boutons SUIV si jamais on arrive à la fin de la liste
+        nextButtons.forEach(element => {
+            if (fin >= Object.keys(listCountries).length) {
+                element.disabled = true;
+            }
+        });
+
+        // Vide le contenu de la table
+        let tableau = document.querySelector('.lesPays');
+        let rowCount = tableau.rows.length;
+        for (let i = rowCount - 1; i > 0; i--) {
+            tableau.deleteRow(i);
+        }
+
+        table = document.querySelectorAll('.lesPays td:not(.tdImg)');
+
+        // ajoute la nouvelle selection dans le table
+        fillTable(deb, fin);
+    });
+});
+
+
+
+// boutons PREC
 previousButtons.forEach(previousButton => {
     previousButton.addEventListener('click', () => {
 
@@ -121,60 +171,60 @@ previousButtons.forEach(previousButton => {
     });
 });
 
-// les boutons SUIV
-nextButtons.forEach(nextButton => {
-    nextButton.addEventListener('click', () => {
+table = document.querySelectorAll('.lesPays td:not(.tdImg)');
 
-        //remonte en haut de la page
-        window.scrollTo(0, 0);
+closeBtn.addEventListener('click', function (event) {
+    let leTable = document.querySelector(".detailsPays table");
+    let lesPays = document.querySelector(".lesPays");
+    let pagination = document.querySelectorAll(".pagination");
+    let close = document.querySelector(".closeButton");
 
-        // nouvelle selection de pays
-        deb = deb + saut;
-        fin = fin + saut;
+    leTable.style.display = "none";
+    lesPays.style.filter = "blur(0px)";
+    lesPays.style.pointerEvents = "all";
 
-        // les numéros de page
-        let pageNumber = document.querySelectorAll('.page-number');
-
-        // Ajoute 1 aux numéros de page
-        pageNumber.forEach(element => {
-            let pageNumberText = element.textContent;
-            let pageNumberArray = pageNumberText.split(' '); // diviser le texte en un tableau de chaînes de caractères, séparées par un espace
-            let dernier = parseInt(pageNumberArray[pageNumberArray.length - 1]); // accéder au dernier élément du tableau et le convertir en un nombre entier  
-            element.textContent = 'Page ' + (dernier + 1);
-        });
-
-        // active les boutons PREC
-        previousButtons.forEach(element => {
-            element.disabled = false;
-        });
-
-        // désactive les boutons SUIV si jamais on arrive à la fin de la liste
-        nextButtons.forEach(element => {
-            if (fin >= Object.keys(listCountries).length) {
-                element.disabled = true;
-            }
-        });
-
-        // Vide le contenu de la table
-        let tableau = document.querySelector('.lesPays');
-        let rowCount = tableau.rows.length;
-        for (let i = rowCount - 1; i > 0; i--) {
-            tableau.deleteRow(i);
-        }
-
-        // ajoute la nouvelle selection dans le table
-        fillTable(deb, fin);
+    pagination.forEach(element => {
+        element.style.pointerEvents = "all";
+        element.style.filter = "blur(0px)";
     });
+
+    close.style.display = "none";
+
+    document.querySelector(".drapeauGrand").style.display = "none";
+
+    // supprimer la ligne nouvellement créée
+    let paysDetails = document.querySelectorAll(".pays-details");
+    paysDetails.forEach(pays => pays.remove());
 });
 
-let table = document.querySelectorAll('.lesPays td:not(.tdImg)');
+document.querySelectorAll(".tdImg").forEach(element => {
+    element.addEventListener('click', function (event) {
+        
+        let lesClasses = element.className.split(' ');
+        let country = listCountries[lesClasses[1]];
+        let close = document.querySelector(".closeButton");
+        let img = document.querySelector(".drapeauGrand");
+
+        let lesPays = document.querySelector(".lesPays");
+        let pagination = document.querySelectorAll(".pagination");
+
+        lesPays.style.filter = "blur(2px)";
+        lesPays.style.pointerEvents = "none";
+
+        pagination.forEach(element => {
+            element.style.pointerEvents = "none";
+            element.style.filter = "blur(2px)";
+        });
+
+        img.style.display = "block";
+        img.src = country.flags.png;
+        close.style.display = "block";
+    });
+});
 
 table.forEach(element => {
     // détecte les clics sur le tableau pour renvoyer les informations du pays
     element.addEventListener('click', function (event) {
-        // remonte en haut de la page
-        window.scrollTo(0, 0);
-
         let leTable = document.querySelector(".detailsPays table");
         let lesPays = document.querySelector(".lesPays");
         let pagination = document.querySelectorAll(".pagination");
@@ -284,40 +334,5 @@ table.forEach(element => {
         } else {
             cellule12.textContent = "Pas de langages.";
         }
-    });
-});
-
-
-let closeBtn = document.querySelector('.closeButton');
-
-closeBtn.addEventListener('click', function (event) {
-    let leTable = document.querySelector(".detailsPays table");
-    let lesPays = document.querySelector(".lesPays");
-    let pagination = document.querySelectorAll(".pagination");
-    let close = document.querySelector(".closeButton");
-
-    leTable.style.display = "none";
-    lesPays.style.filter = "blur(0px)";
-    lesPays.style.pointerEvents = "all";
-
-    pagination.forEach(element => {
-        element.style.pointerEvents = "all";
-        element.style.filter = "blur(0px)";
-    });
-
-    close.style.display = "none";
-
-    // supprimer la ligne nouvellement créée
-    let paysDetails = document.querySelectorAll(".pays-details");
-    paysDetails.forEach(pays => pays.remove());
-});
-
-document.querySelectorAll(".tdImg").forEach(element => {
-    element.addEventListener('click', function (event) {
-        let country = listCountries[event.target.classList];
-        console.log(country);
-        let img = document.querySelector(".drapeauGrand");
-        img.style.display = "block";
-        img.src = country.country.flags.png;
     });
 });

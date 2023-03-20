@@ -26,7 +26,7 @@ th, td {
 
 .detailsPays table {
     display: none;
-    position: absolute;
+    position: fixed;
     width: 80%;
     top: 40%;
     left: 50%;
@@ -39,7 +39,7 @@ th, td {
 
 .closeButton {
     display: none;
-    position: absolute;
+    position: fixed;
     top: 24%;
     right: 6%;
     border-radius: 40px;
@@ -51,7 +51,7 @@ th, td {
 
 .drapeauGrand {
     display: none;
-    position: absolute;
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
