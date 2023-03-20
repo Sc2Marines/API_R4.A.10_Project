@@ -17,10 +17,6 @@ var MyNameSpace = function () {
         return myfunctions;
     }
 
-    function logall() {
-        console.log("success");
-    }
-
     //Q1 - outsideTheContinent() : Pays dont au moins un pays frontalier n’est pas dans le
     // même continent.
     function outsideTheContinent() {
@@ -84,13 +80,14 @@ var MyNameSpace = function () {
         // Display of the countries with the most neighbors and their respective neighbors
         countriesWithMaxNeighbors.forEach(country => {
             console.log("Pays ayant le plus de voisins : " + country.name + " avec " + maxNeighborsCount + " voisins.");
-
+            html += "Pays ayant le plus de voisins : " + country.name + " avec " + maxNeighborsCount + " voisins.<br>";
             // Checking if the country has neighbors
             if (country.borders && country.borders.length > 0) {
                 country.borders.forEach(element => {
                     // Checking if the element is defined and has a name property
                     if (listCountries[element] != null && listCountries[element].name !== undefined) {
                         console.log(`    - ${listCountries[element].name}`);
+                        html += `    - ${listCountries[element].name}<br>`;
                     } else {
                         console.log(`    - ${element} (Ce code alpha 3 n'est pas associé à un pays)`);
                     }
@@ -99,10 +96,6 @@ var MyNameSpace = function () {
                 console.log(`  No neighbors.`);
             }
         });
-
-        for (let i = 0; i < countriesWithMaxNeighbors.length; i++) {
-            html += '&nbsp;-' + countriesWithMaxNeighbors[i].name + '<br>';
-        }
         // Returns the countries with the most neighbors
         return html;
     }
@@ -166,20 +159,18 @@ var MyNameSpace = function () {
         // Display of the countries with the most languages ​​and their respective languages
         countriesWithMaxLanguages.forEach(country => {
             console.log("Pays ayant le plus de langues : " + country.name + " avec " + maxLanguagesCount + " langues.");
-
+            html += "Pays ayant le plus de langues : " + country.name + " avec " + maxLanguagesCount + " langues.<br>";
             // Checking if the country has languages
             if (maxLanguagesCount > 0) {
                 for (var key in country.languages.all_languages) {
                     console.log(`    - ${country.languages.all_languages[key]}`);
+                    html += `    - ${country.languages.all_languages[key]}<br>`;
                 }
             } else {
                 console.log(`  Pas de langues.`);
             }
         });
 
-        for (let i = 0; i < countriesWithMaxLanguages.length; i++) {
-            html += '&nbsp;-' + countriesWithMaxLanguages[i].name + '<br>';
-        }
         // Returns the countries with the most neighbors
         return html;
     }
