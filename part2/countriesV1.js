@@ -3,20 +3,13 @@ import fill_db from "../part1/Country.js";
 
 //listCountries array of class Country (calling method fill_db of file Country.js)
 let listCountries = fill_db();
-console.log(listCountries[0]);
 
-let deb = 0;
-let fin = 5;
-
-function fillTable(start, end) {
-
+function fillTable() {
     // parcours les pays
     //for (let theCountry in listCountries) {
-    while (start < listCountries.length && start < end) {
-        let country = listCountries[start];
+    for (let theCountry in listCountries) {
+        let country = listCountries[theCountry];
 
-
-        // sélectionner le tableau
         let tableau = document.querySelector('table');
 
         // insérer une nouvelle ligne
@@ -45,9 +38,7 @@ function fillTable(start, end) {
 
         // ajout du img dans la cellule du tableau
         cellule6.appendChild(imgDrapeau);
-        
-        start = start + 1;
     }
 }
 
-fillTable(deb, fin);
+fillTable();
