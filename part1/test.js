@@ -175,6 +175,17 @@ var MyNameSpace = function () {
         return html;
     }
 
+
+    //get coutnry by name (return country object)
+    function getCountryByName(name) {
+        for (let theCountry in listCountries) {
+            let country = listCountries[theCountry];
+            if (country.name == name) {
+                return country;
+            }
+        }
+    }
+
     //Q5 - withCommonLanguage() : Pays ayant au moins un voisin parlant l’une de ses
     // langues.Affichez aussi les pays voisins et les langues en question.
 
@@ -241,7 +252,18 @@ var MyNameSpace = function () {
                     // Checking if the element is defined and has a name property
                     if (element != null && element.name !== undefined) {
                         console.log(`    - ${element.name}`);
-                        html += '&nbsp;&nbsp;&nbsp;-' + element.name + "<br>";
+                        html += '&nbsp;&nbsp;&nbsp;-' + element.name + ':';
+                        //add the commons languages from the country and the neighbor to the html
+                        let languages = element.getLanguages().get_all_languages();
+                        console.log(dico);
+                        html += " [";
+                        for (let key in languages) {
+                            if (key in getCountryByName(country).getLanguages().get_all_languages()) {
+                                console.log(`        - ${languages[key]}`);
+                                html += languages[key] + ", " ;
+                            }
+                        }
+                        html += "]<br>";
                     } else {
                         console.log(`    - ${element} (Ce code alpha 3 n'est pas associé à un pays)`);
                     }
