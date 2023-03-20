@@ -188,7 +188,10 @@ function fill_db() {
     return allCountries;
 }
 
+const allCountries = fill_db();
 const list = fill_db();
+
+
 // console.log(list); //ok
 // console.log(list["FRA"]); //ok
 // console.log(list["FRA"].getPopDensity()); //ok

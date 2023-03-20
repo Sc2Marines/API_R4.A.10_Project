@@ -17,15 +17,11 @@ var MyNameSpace = function () {
         return myfunctions;
     }
 
-    function logall() {
-        console.log("success");
-    }
-
     //Q1 - outsideTheContinent() : Pays dont au moins un pays frontalier n’est pas dans le
     // même continent.
     function outsideTheContinent() {
         let outsideTheRegion = [];
-
+        let html = "";
         // Course of all the countries of the list
         for (let theCountry in listCountries) {
             // interesting information
@@ -45,7 +41,10 @@ var MyNameSpace = function () {
                 }
             });
         }
-        return outsideTheRegion;
+        for (let i = 0; i < outsideTheRegion.length; i++) {
+            html += '&nbsp;-' + outsideTheRegion[i].name + '<br>';
+        }
+        return html;
     }
 
     //Q2 - moreNeighbors() : Pays(possibilité de plusieurs) ayant le plus grand nombre de
@@ -54,6 +53,7 @@ var MyNameSpace = function () {
         // Initialization of the counting and storage variables
         let maxNeighborsCount = 0;
         let countriesWithMaxNeighbors = [];
+        let html = "";
 
         // Course of all the countries of the list
         for (let theCountry in listCountries) {
@@ -79,14 +79,15 @@ var MyNameSpace = function () {
 
         // Display of the countries with the most neighbors and their respective neighbors
         countriesWithMaxNeighbors.forEach(country => {
-            console.log("Pays ayant le plus de voisins : "+country.name+ " avec "+maxNeighborsCount+" voisins.");
-
+            console.log("Pays ayant le plus de voisins : " + country.name + " avec " + maxNeighborsCount + " voisins.");
+            html += "Pays ayant le plus de voisins : " + country.name + " avec " + maxNeighborsCount + " voisins.<br>";
             // Checking if the country has neighbors
             if (country.borders && country.borders.length > 0) {
                 country.borders.forEach(element => {
                     // Checking if the element is defined and has a name property
                     if (listCountries[element] != null && listCountries[element].name !== undefined) {
                         console.log(`    - ${listCountries[element].name}`);
+                        html += `    - ${listCountries[element].name}<br>`;
                     } else {
                         console.log(`    - ${element} (Ce code alpha 3 n'est pas associé à un pays)`);
                     }
@@ -95,15 +96,14 @@ var MyNameSpace = function () {
                 console.log(`  No neighbors.`);
             }
         });
-
         // Returns the countries with the most neighbors
-        return countriesWithMaxNeighbors;
+        return html;
     }
 
     //Q3 - neighborless() : Pays n’ayant aucun voisin.
     function neighborless() {
         let listNeighborless = [];
-        
+        let html = "";
         //Course of all the countries of the list
         for (let theCountry in listCountries) {
             let country = listCountries[theCountry];
@@ -116,7 +116,10 @@ var MyNameSpace = function () {
             }
         }
 
-        return listNeighborless;
+        for (let i = 0; i < listNeighborless.length; i++) {
+            html += '&nbsp;-' + listNeighborless[i].name + '<br>';
+        }
+        return html;
     }
 
     //Q4 - moreLanguages() : Pays(possibilité de plusieurs) parlant le plus de langues.
@@ -125,6 +128,7 @@ var MyNameSpace = function () {
         // Initialization of language counting and storage variables
         let maxLanguagesCount = 0;
         let countriesWithMaxLanguages = [];
+        let html = "";
 
         // Course of all the countries of the list
         for (let theCountry in listCountries) {
@@ -137,7 +141,7 @@ var MyNameSpace = function () {
             // Check if the country has more languages ​​than the previous countries browsed and update the max size
             if (taille > maxLanguagesCount) {
                 maxLanguagesCount = taille;
-            } 
+            }
         }
 
         // look again to find out which countries correspond to the maximum size
@@ -154,12 +158,13 @@ var MyNameSpace = function () {
 
         // Display of the countries with the most languages ​​and their respective languages
         countriesWithMaxLanguages.forEach(country => {
-            console.log("Pays ayant le plus de langues : "+country.name+ " avec "+maxLanguagesCount+" langues.");
-
+            console.log("Pays ayant le plus de langues : " + country.name + " avec " + maxLanguagesCount + " langues.");
+            html += "Pays ayant le plus de langues : " + country.name + " avec " + maxLanguagesCount + " langues.<br>";
             // Checking if the country has languages
             if (maxLanguagesCount > 0) {
                 for (var key in country.languages.all_languages) {
                     console.log(`    - ${country.languages.all_languages[key]}`);
+                    html += `    - ${country.languages.all_languages[key]}<br>`;
                 }
             } else {
                 console.log(`  Pas de langues.`);
@@ -167,7 +172,18 @@ var MyNameSpace = function () {
         });
 
         // Returns the countries with the most neighbors
-        return countriesWithMaxLanguages;
+        return html;
+    }
+
+
+    //get coutnry by name (return country object)
+    function getCountryByName(name) {
+        for (let theCountry in listCountries) {
+            let country = listCountries[theCountry];
+            if (country.name == name) {
+                return country;
+            }
+        }
     }
 
     //Q5 - withCommonLanguage() : Pays ayant au moins un voisin parlant l’une de ses
@@ -179,7 +195,7 @@ var MyNameSpace = function () {
         let count = 0;
 
         for (let i = 0; i < listCountriesCopy.length; i++) {
-            
+
             let dico = {};
             let country = listCountriesCopy[i];
             let languages = country.getLanguages().get_all_languages();
@@ -194,8 +210,7 @@ var MyNameSpace = function () {
                 if (border == null) {
                     continue;
                 }
-                else 
-                {
+                else {
                     if (border.getLanguages() != null) {
                         let borderLanguages = border.getLanguages().get_all_languages();
                         //for each key in borderLanguages
@@ -228,7 +243,7 @@ var MyNameSpace = function () {
             //print the type of the key
             let country = keys[0];
             let neighbors = dico[country];
-            
+
             console.log("Pays ayant au moins un voisin parlant l'une de ses langues : " + country);
             html += country + "<br>";
             // Checking if the country has neighbors
@@ -237,7 +252,18 @@ var MyNameSpace = function () {
                     // Checking if the element is defined and has a name property
                     if (element != null && element.name !== undefined) {
                         console.log(`    - ${element.name}`);
-                        html += '&nbsp;&nbsp;&nbsp;-' + element.name + "<br>";
+                        html += '&nbsp;&nbsp;&nbsp;-' + element.name + ':';
+                        //add the commons languages from the country and the neighbor to the html
+                        let languages = element.getLanguages().get_all_languages();
+                        console.log(dico);
+                        html += " [";
+                        for (let key in languages) {
+                            if (key in getCountryByName(country).getLanguages().get_all_languages()) {
+                                console.log(`        - ${languages[key]}`);
+                                html += languages[key] + ", " ;
+                            }
+                        }
+                        html += "]<br>";
                     } else {
                         console.log(`    - ${element} (Ce code alpha 3 n'est pas associé à un pays)`);
                     }
@@ -251,8 +277,7 @@ var MyNameSpace = function () {
     }
 
     //Q6 - withoutCommonCurrency() : Pays, sans aucun voisin ayant au moins une de ses monnaies.
-    function withoutCommonCurrency()
-    {
+    function withoutCommonCurrency() {
         let listCountriesCopy = Object.values(listCountries).slice();
         let listCountriesWithoutCommonCurrency = [];
         let count = 0;
@@ -278,7 +303,7 @@ var MyNameSpace = function () {
                     continue;
                 }
                 else {
-                    if (border.getCurrencies()!= null) {
+                    if (border.getCurrencies() != null) {
                         let borderCurrencies = border.getCurrencies().get_all_currencies();
                         console.log(borderCurrencies)
                         //for each key in borderLanguages
@@ -286,11 +311,10 @@ var MyNameSpace = function () {
                             //if the key is in languages
                             if (key in currencies) {
                                 hasCommonCurrencies = true;
-                                
+
                                 break;
                             }
-                            else 
-                            {
+                            else {
                                 dico[country.name].push(border);
                                 break;
                             }
@@ -345,7 +369,7 @@ var MyNameSpace = function () {
         console.log("sortingDecreasingDensity");
         // Copier le tableau des pays pour ne pas le modifier directement
         let listCountriesCopy = Object.values(listCountries).slice();
-
+        let html = "";
         // Fonction de comparaison pour trier par ordre décroissant de densité de population
         function comparePopulationDensity(a, b) {
             let densityA = a.getPopDensity();
@@ -362,12 +386,16 @@ var MyNameSpace = function () {
         // Trier les pays par ordre décroissant de densité de population
         listCountriesCopy.sort(comparePopulationDensity);
 
+        for (let i = 0; i < listCountriesCopy.length; i++) {
+            html += '&nbsp;-' + listCountriesCopy[i].name + " : " + listCountriesCopy[i].getPopDensity() + "<br>";
+        }
         // Retourner le nouveau tableau trié
-        return listCountriesCopy;
+        return html;
     }
 
     //Q8 - moreTopLevelDomains() : Pays ayant plusieurs Top Level Domains Internet.
     function moreTopLevelDomains() {
+        let html = "";
         console.log("moreTopLevelDomains");
         let listCountriesCopy = Object.values(listCountries).slice();
         let listCountriesWithMoreTopLevelDomains = [];
@@ -378,13 +406,73 @@ var MyNameSpace = function () {
             }
         }
 
-        return listCountriesWithMoreTopLevelDomains;
+        for (let i = 0; i < listCountriesWithMoreTopLevelDomains.length; i++) {
+            html += '&nbsp;-' + listCountriesWithMoreTopLevelDomains[i].name + "<br>";
+        }
+
+        return html;
     }
 
     //Q9 - veryLongTrip(nom_pays) : En partant d’un pays donné(représenté ici par
     // l’argument nom_pays), listez tous les pays que l’on peut visiter en passant de l’un à
     // l’autre.Evidemment, seuls les pays frontaliers sont accessibles depuis un pays donné.
     // Exemple : France -> Espagne -> Portugal.
+    // on peut accéder à la liste des pays frontaliers d’un pays donné via la méthode getBorders()
+    // Exemple : listCountries["FRA"].getBorders() retourne la liste des pays frontaliers de la France.
+    // on peut accéder au nom d’un pays via la propriété name
+    // Exemple : listCountries["FRA"].name retourne le nom de la France.
+
+    function veryLongTrip(nom_pays = "") {
+
+        let listCountriesCopy = Object.values(listCountries).slice();
+        let dico = {};
+        //if nom_pays is empty, ask the user to enter a country name and while the country name is not in the listCountriesCopy, ask again
+        if (nom_pays == "") {
+            nom_pays = prompt("Entrez le nom d'un pays : ");
+            while (!listCountriesCopy.find(country => country.name == nom_pays)) {
+                nom_pays = prompt("Entrez le nom d'un pays : ");
+            }
+        }
+
+        let pile = [[nom_pays]];
+        let visites = new Set();
+        let html = "";
+        visites.add(nom_pays);
+        while (pile.length > 0) {
+            let chemin = pile.pop();
+            let paysActuel = chemin[chemin.length - 1];
+            let index = listCountriesCopy.findIndex(country => country.name == paysActuel);
+            let voisins = listCountriesCopy[index].getBorders();
+
+            voisins.forEach(voisin => {
+                if (!visites.has(voisin)) {
+                    visites.add(voisin);
+                    let nouveauChemin = chemin.concat([voisin.name]);
+                    pile.push(nouveauChemin);
+                    if (!dico[paysActuel]) {
+                        dico[paysActuel] = [];
+                    }
+                    dico[paysActuel].push({ pays: voisin.name, chemin: nouveauChemin });
+                }
+            });
+        }
+        for (let key in dico) {
+            dico[key].forEach(element => {
+                let chemin = element.chemin.join(" -> ");
+                html += `&nbsp;-<a href="#" onclick="alert('${chemin}')">${element.pays}</a><br>`;
+            });
+        }
+        return html;
+    }
+
+
+
+
+
+
+
+
+
 
 
     return {
@@ -394,10 +482,10 @@ var MyNameSpace = function () {
         neighborless: neighborless,
         moreLanguages: moreLanguages,
         sortingDecreasingDensity: sortingDecreasingDensity,
-        logall: logall,
         moreTopLevelDomains: moreTopLevelDomains,
         withoutCommonCurrency: withoutCommonCurrency,
-        withCommonLanguage: withCommonLanguage
+        withCommonLanguage: withCommonLanguage,
+        veryLongTrip: veryLongTrip
     };
 }();
 
@@ -412,7 +500,6 @@ function addButtons() {
         //btn.onclick = functions[i];
         document.body.appendChild(btn);
     }
-
     //ajout d'events listeners sur chaque bouton
     let buttons = document.getElementsByTagName("button");
     for (let i = 0; i < buttons.length; i++) {
