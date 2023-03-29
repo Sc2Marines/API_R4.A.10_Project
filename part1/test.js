@@ -401,7 +401,7 @@ var MyNameSpace = function () {
         let listCountriesWithMoreTopLevelDomains = [];
 
         for (let i = 0; i < listCountriesCopy.length; i++) {
-            if (listCountriesCopy[i].getTopLevelDomains().length > 1) {
+            if (listCountriesCopy[i].gettopLevelDomain().length > 1) {
                 listCountriesWithMoreTopLevelDomains.push(listCountriesCopy[i]);
             }
         }
