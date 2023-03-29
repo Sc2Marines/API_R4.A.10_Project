@@ -4,7 +4,7 @@ import Currency from "./Currency.js";
 
 
 class Country {
-    constructor(alpha3Code, area, borders, capital, region, demonym, flags, name, population, topLeveLDomains, currencies, languages) {
+    constructor(alpha3Code, area, borders, capital, region, demonym, flags, name, population, topLevelDomain, currencies, languages) {
         this.alpha3Code = alpha3Code;
         this.area = area;
         this.borders = borders;
@@ -14,7 +14,7 @@ class Country {
         this.flags = flags;
         this.name = name;
         this.population = population;
-        this.topLeveLDomains = topLeveLDomains;
+        this.topLevelDomain = topLevelDomain;
         if (currencies != null) {
             let currency =  new Currency();
             for (let i = 0; i < currencies.length; i++) {
@@ -67,8 +67,8 @@ class Country {
     getpopulation() {
         return this.population;
     }
-    getTopLevelDomains() {
-        return this.topLeveLDomains;
+    gettopLevelDomain() {
+        return this.topLevelDomain;
     }
     // getCurrencies() {
     //     return this.currencies;
@@ -105,8 +105,8 @@ class Country {
     setpopulation(population) {
         this.population = population;
     }
-    setTopLevelDomains(topLeveLDomains) {
-        this.topLeveLDomains = topLeveLDomains;
+    settopLevelDomain(topLevelDomain) {
+        this.topLevelDomain = topLevelDomain;
     }
     setCurrencies(currencies) {
         this.currencies = currencies;
@@ -117,7 +117,7 @@ class Country {
 
     // toString method
     toString() {
-        return `Alpha3Code: ${this.alpha3Code}, Area: ${this.area}, borders: ${this.borders}, Country name: ${this.name}, Capital: ${this.capital}, region: ${this.region}, Demonym: ${this.demonym}, flags: ${this.flags}, Population: ${this.population}, Top Level Domains: ${this.topLeveLDomains}, Currencies: ${this.currencies}, Languages: ${this.languages}`;
+        return `Alpha3Code: ${this.alpha3Code}, Area: ${this.area}, borders: ${this.borders}, Country name: ${this.name}, Capital: ${this.capital}, region: ${this.region}, Demonym: ${this.demonym}, flags: ${this.flags}, Population: ${this.population}, Top Level Domains: ${this.topLevelDomain}, Currencies: ${this.currencies}, Languages: ${this.languages}`;
     }
 
     //return population density

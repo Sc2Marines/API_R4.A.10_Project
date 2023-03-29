@@ -15,7 +15,7 @@ function fillTable(start, end) {
         if (count >= start && start < end && start < Object.keys(listCountries).length) {
 
             // sélectionner le tableau
-            let tableau = document.querySelector('table');
+            let tableau = document.querySelector('.lesPays');
 
             // insérer une nouvelle ligne
             let nouvelleLigne = tableau.insertRow();
@@ -96,7 +96,7 @@ previousButtons.forEach(previousButton => {
             });
 
             // Vide le contenu de la table pour retirer les pays déjà affichés
-            let tableau = document.querySelector('table');
+            let tableau = document.querySelector('.lesPays');
             let rowCount = tableau.rows.length;
             for (let i = rowCount - 1; i > 0; i--) {
                 tableau.deleteRow(i);
@@ -143,7 +143,7 @@ nextButtons.forEach(nextButton => {
         });
 
         // Vide le contenu de la table
-        let tableau = document.querySelector('table');
+        let tableau = document.querySelector('.lesPays');
         let rowCount = tableau.rows.length;
         for (let i = rowCount - 1; i > 0; i--) {
             tableau.deleteRow(i);
