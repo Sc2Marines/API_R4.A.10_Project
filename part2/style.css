@@ -1,3 +1,42 @@
+/* Menu navigation entre fichiers */
+
+.navFichiers a {
+    color: blue;
+}
+
+.navFichiers {
+    width: 100%;
+}
+
+.navFichiers ul {
+    display: flex;
+    justify-content: space-around;
+}
+
+.navFichiers ul {
+    list-style: none;
+}
+
+.navFichiers .active {
+    color: red;
+}
+
+/* filtres, tris et pagination */
+
+.pagination {
+    margin: 1em 0;
+}
+
+.filtres h2 {
+    margin: 0;
+}
+
+.filtres > div {
+    margin: .5em 0 1em 0;
+}
+
+/* Affichage de tous les pays */
+
 .lesPays, .detailsPays table {
     border-collapse: collapse;
     width: 100%;
@@ -15,9 +54,11 @@ th, td {
 }
 
 .lesPays img {
-    height: auto;
-    max-height: 50px;
+    height: 1em;
+    width: auto;
 }
+
+/* Detail d'un pays */
 
 .detailsPays th {
     color: white;

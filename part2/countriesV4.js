@@ -10,19 +10,21 @@ var fin = saut;
 //listCountries array of class Country (calling method fill_db of file Country.js)
 var listCountries = fill_db();
 
-// affiche les pays
-fillTable(deb, fin);
-
 // event listener
 var closeBtn = document.querySelector('.closeButton');
 var previousButtons = document.querySelectorAll('.previous-button');
 var nextButtons = document.querySelectorAll('.next-button');
 
 function fillTable(start, end) {
+    // réinitialise le tableau
+    document.querySelectorAll(".lesPays tbody tr").forEach(element => {
+        element.remove();
+    });
+
     // parcours les pays
     for (let theCountry in listCountries) {
-        
-        //récupère les informations du pays
+
+        // récupère les informations du pays
         let country = listCountries[theCountry];
 
         // séléctionne le tableau
@@ -40,7 +42,7 @@ function fillTable(start, end) {
         if (country.population) {
             td2.textContent = country.population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         } else {
-            td3.textContent = country.population;
+            td2.textContent = country.population;
         }
         td2.classList.add(country.alpha3Code);
 
@@ -82,7 +84,7 @@ function fillTable(start, end) {
     let count = 0;
 
     document.querySelectorAll(".lesPays tbody tr").forEach(element => {
-        if (count < start || count > end) {
+        if (count < start || count >= end) {
             element.style.display = "none";
         }
         count = count + 1;
@@ -92,7 +94,6 @@ function fillTable(start, end) {
 // les boutons SUIV
 nextButtons.forEach(nextButton => {
     nextButton.addEventListener('click', function (event) {
-
         //remonte en haut de la page
         window.scrollTo(0, 0);
 
@@ -118,7 +119,7 @@ nextButtons.forEach(nextButton => {
 
         // désactive les boutons SUIV si jamais on arrive à la fin de la liste
         nextButtons.forEach(element => {
-            if (fin >= Object.keys(listCountries).length) {
+            if (fin >= document.querySelectorAll(".lesPays tbody tr").length) {
                 element.disabled = true;
             }
         });
@@ -304,9 +305,8 @@ function afficheInformations() {
             let cellule12 = nouvelleLigne.insertCell();
             cellule12.classList.add("pays-details");
 
-
             // ajouter des données aux cellules
-            cellule1.textContent = country.name;
+            cellule1.textContent = country.translationFR;
             cellule2.textContent = country.population;
             cellule3.textContent = country.area + " km²";
             cellule4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
@@ -360,7 +360,119 @@ function afficheInformations() {
     });
 }
 
+// initialise les listes déroulantes avec la liste des continents et des langues
+function initListes() {
+    //initialise les listes 
+    var listContinents = [];
+    var listLangages = [];
 
-//initialise les fonctions pour afficher les informations et drapeaux des pays
+    // parcours les pays
+    for (let theCountry in listCountries) {
+        //récupère les informations du pays
+        let country = listCountries[theCountry];
+
+        //crée la liste des continents
+        if (!listContinents.includes(country.region)) {
+            listContinents.push(country.region)
+        }
+
+        //crée la liste des langages
+        let languages = null
+        if (country && country.languages) {
+            languages = country.languages.all_languages;
+            for (const key in languages) {
+                if (!listLangages.includes(languages[key])) {
+                    listLangages.push(languages[key])
+                }
+
+            }
+        }
+    }
+
+    // trie par ordre alphabetique les tableaux
+    listContinents = listContinents.sort();
+    listLangages = listLangages.sort();
+
+    var selectContinents = document.querySelector(".selectContinents");
+    listContinents.forEach(element => {
+        let opt = document.createElement("option");
+
+        opt.value = element;
+        opt.text = element;
+
+        selectContinents.add(opt, null);
+    });
+
+    var selectLangages = document.querySelector(".selectLangages");
+    listLangages.forEach(element => {
+        let opt = document.createElement("option");
+
+        opt.value = element;
+        opt.text = element;
+
+        selectLangages.add(opt, null);
+    });
+}
+
+//initialise la page
+fillTable(deb, fin);
 afficheInformations();
 afficheDrapeau();
+initListes();
+
+document.querySelector(".submitFiltres").addEventListener("click", function () {
+    deb = 0;
+    fin = saut;
+
+    let newListe = [];
+    let continent = document.querySelector(".selectContinents").value;
+    let langues = document.querySelector(".selectLangages").value;
+
+    if (continent == "vide" && langues == "vide") {
+        listCountries = fill_db();
+    } else {
+        let pageNumber = document.querySelectorAll('.page-number');
+
+        // réinitialise le numéro de page
+        pageNumber.forEach(element => {
+            element.textContent = 'Page 1';
+        });
+
+        newListe = [];
+        listCountries = fill_db();
+
+        if (continent != 'vide') {
+            for (let theCountry in listCountries) {
+                let country = listCountries[theCountry];
+
+                if (country.region == continent) {
+                    newListe.push(country);
+                }
+            }
+        }
+
+        if (langues != 'vide') {
+            for (let theCountry in listCountries) {
+                let country = listCountries[theCountry];
+                let languages = null
+                if (country && country.languages) {
+                    languages = country.languages.all_languages;
+                    for (const key in languages) {
+                        if (languages[key] == langues) {
+                            newListe.push(country);
+                        }
+                    }
+                }
+            }
+        }
+
+        listCountries = newListe;
+    }
+
+    // rempli le tableau avec la nouvelle selection de pays
+    fillTable(deb, fin);
+
+    //actualise les fonctions pour afficher les informations et drapeaux des pays
+    afficheInformations();
+    afficheDrapeau();
+});

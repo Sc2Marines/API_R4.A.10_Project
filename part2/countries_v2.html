@@ -10,34 +10,49 @@
 </head>
 
 <body>
-    <div>
-        <div class="pagination">
-            <button class="previous-button" disabled>PRÉC</button>
-            <span class="page-number">Page 1</span>
-            <button class="next-button">SUIV</button>
-        </div>
+    <header>
+        <nav class="navFichiers">
+            <ul>
+                <li><a href="template.html">Template</a></li>
+                <li><a href="countries_v1.html">Countries V1</a></li>
+                <li><a class="active" href="countries_v2.html">Countries V2</a></li>
+                <li><a href="countries_v3.html">Countries V3</a></li>
+                <li><a href="countries_v4.html">Countries V4</a></li>
+            </ul>
+        </nav>
+        <hr>
+    </header>
+    <main>
         <div>
-            <table class="lesPays">
-                <thead>
-                    <tr>
-                        <th>Nom en français</th>
-                        <th>Population</th>
-                        <th>Surface</th>
-                        <th>Densité de population</th>
-                        <th>Continent d'appartenance</th>
-                        <th>Drapeau</th>
-                    </tr>
-                </thead>
-                <tbody>           
-                </tbody>
-            </table>
+            <div class="pagination">
+                <button class="previous-button" disabled>PRÉC</button>
+                <span class="page-number">Page 1</span>
+                <button class="next-button">SUIV</button>
+            </div>
+            <div>
+                <table class="lesPays">
+                    <thead>
+                        <tr>
+                            <th>Nom en français</th>
+                            <th>Population</th>
+                            <th>Surface</th>
+                            <th>Densité de population</th>
+                            <th>Continent d'appartenance</th>
+                            <th>Drapeau</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">
+                <button class="previous-button" disabled>PRÉC</button>
+                <span class="page-number">Page 1</span>
+                <button class="next-button">SUIV</button>
+            </div>
         </div>
-        <div class="pagination">
-            <button class="previous-button" disabled>PRÉC</button>
-            <span class="page-number">Page 1</span>
-            <button class="next-button">SUIV</button>
-        </div>
-    </div>
+    </main>
 </body>
 <script src="countriesV2.js" type="module"></script>
+
 </html>
