@@ -1,4 +1,3 @@
-import Country from "../part1/Country.js";
 import fill_db from "../part1/Country.js";
 
 //listCountries array of class Country (calling method fill_db of file Country.js)
@@ -6,38 +5,57 @@ let listCountries = fill_db();
 
 function fillTable() {
     // parcours les pays
-    //for (let theCountry in listCountries) {
     for (let theCountry in listCountries) {
+        //récupère les informations du pays
         let country = listCountries[theCountry];
 
-        let tableau = document.querySelector('.lesPays');
+        // séléctionne le tableau
+        let tableau = document.querySelector('.lesPays tbody');
 
-        // insérer une nouvelle ligne
-        let nouvelleLigne = tableau.insertRow();
+        // Créer l'élément de ligne de tableau
+        var tr = document.createElement("tr");
 
-        // insérer des cellules dans la nouvelle ligne
-        let cellule1 = nouvelleLigne.insertCell();
-        let cellule2 = nouvelleLigne.insertCell();
-        let cellule3 = nouvelleLigne.insertCell();
-        let cellule4 = nouvelleLigne.insertCell();
-        let cellule5 = nouvelleLigne.insertCell();
-        let cellule6 = nouvelleLigne.insertCell();
+        // Créer les éléments de données pour chaque colonne
+        var td1 = document.createElement("td");
+        td1.textContent = country.translationFR;
 
-        //balise img pour le drapeau
-        let imgDrapeau = document.createElement('img');
+        var td2 = document.createElement("td");
+        if (country.population) {
+            td2.textContent = country.population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        } else {
+            td3.textContent = country.population;
+        }
+        td2.classList.add(country.alpha3Code);
 
-        // ajouter des données aux cellules
-        cellule1.textContent = country.name;
-        cellule2.textContent = country.population;
-        cellule3.textContent = country.area + " km²";
-        cellule4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
-        cellule5.textContent = country.region;
+        var td3 = document.createElement("td");
+        if (country.area) {
+            td3.textContent = country.area.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " km²";
+        } else {
+            td3.textContent = country.area + " km²";
+        }
+        td3.classList.add(country.alpha3Code);
 
-        // lien de l'image dans le src de la balise img
-        imgDrapeau.src = country.flags.png;
+        var td4 = document.createElement("td");
+        td4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
 
-        // ajout du img dans la cellule du tableau
-        cellule6.appendChild(imgDrapeau);
+        var td5 = document.createElement("td");
+        td5.textContent = country.region;
+
+        var td6 = document.createElement("td");
+        var img = document.createElement("img");
+        img.src = country.flags.png;
+        img.alt = "Drapeau de " + country.translationFR;
+        td6.appendChild(img);
+
+        // Ajouter les éléments de données à la ligne de tableau
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tr.appendChild(td3);
+        tr.appendChild(td4);
+        tr.appendChild(td5);
+        tr.appendChild(td6);
+
+        tableau.appendChild(tr);
     }
 }
 

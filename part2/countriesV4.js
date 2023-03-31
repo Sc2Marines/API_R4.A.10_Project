@@ -7,11 +7,11 @@ const saut = 25;
 var deb = 0;
 var fin = saut;
 
-//listCountries array of class Country (calling method fill_db of file Country.js)
-var listCountries = fill_db();
+//constante pour récupérer les données
+const LISTCOUNTRIESCONST = fill_db();
 
-// affiche les pays
-fillTable(deb, fin);
+//variable utilisée pour la tableau initial
+var listCountries = fill_db();
 
 // event listener
 var closeBtn = document.querySelector('.closeButton');
@@ -19,10 +19,15 @@ var previousButtons = document.querySelectorAll('.previous-button');
 var nextButtons = document.querySelectorAll('.next-button');
 
 function fillTable(start, end) {
+    // réinitialise le tableau
+    document.querySelectorAll(".lesPays tbody tr").forEach(element => {
+        element.remove();
+    });
+
     // parcours les pays
     for (let theCountry in listCountries) {
-        
-        //récupère les informations du pays
+
+        // récupère les informations du pays
         let country = listCountries[theCountry];
 
         // séléctionne le tableau
@@ -40,7 +45,7 @@ function fillTable(start, end) {
         if (country.population) {
             td2.textContent = country.population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         } else {
-            td3.textContent = country.population;
+            td2.textContent = country.population;
         }
         td2.classList.add(country.alpha3Code);
 
@@ -82,7 +87,7 @@ function fillTable(start, end) {
     let count = 0;
 
     document.querySelectorAll(".lesPays tbody tr").forEach(element => {
-        if (count < start || count > end) {
+        if (count < start || count >= end) {
             element.style.display = "none";
         }
         count = count + 1;
@@ -92,7 +97,6 @@ function fillTable(start, end) {
 // les boutons SUIV
 nextButtons.forEach(nextButton => {
     nextButton.addEventListener('click', function (event) {
-
         //remonte en haut de la page
         window.scrollTo(0, 0);
 
@@ -118,7 +122,7 @@ nextButtons.forEach(nextButton => {
 
         // désactive les boutons SUIV si jamais on arrive à la fin de la liste
         nextButtons.forEach(element => {
-            if (fin >= Object.keys(listCountries).length) {
+            if (fin >= document.querySelectorAll(".lesPays tbody tr").length) {
                 element.disabled = true;
             }
         });
@@ -200,6 +204,7 @@ closeBtn.addEventListener('click', function () {
 
     leTable.style.display = "none";
     lesPays.style.filter = "blur(0px)";
+    document.querySelector(".filtres").style.filter = "blur(0px)";
     lesPays.style.pointerEvents = "all";
 
     pagination.forEach(element => {
@@ -221,7 +226,7 @@ function afficheDrapeau() {
         element.addEventListener('click', function () {
 
             let lesClasses = element.className.split(' ');
-            let country = listCountries[lesClasses[1]];
+            let country = LISTCOUNTRIESCONST[lesClasses[1]];
             let close = document.querySelector(".closeButton");
             let img = document.querySelector(".drapeauGrand");
 
@@ -251,10 +256,11 @@ function afficheInformations() {
             let lesPays = document.querySelector(".lesPays");
             let pagination = document.querySelectorAll(".pagination");
             let close = document.querySelector(".closeButton");
-            let country = listCountries[event.target.classList];
+            let country = LISTCOUNTRIESCONST[event.target.classList];
 
             leTable.style.display = "block";
             lesPays.style.filter = "blur(2px)";
+            document.querySelector(".filtres").style.filter = "blur(2px)";
             lesPays.style.pointerEvents = "none";
 
             pagination.forEach(element => {
@@ -304,9 +310,13 @@ function afficheInformations() {
             let cellule12 = nouvelleLigne.insertCell();
             cellule12.classList.add("pays-details");
 
-
             // ajouter des données aux cellules
-            cellule1.textContent = country.name;
+            if (country && "translationFR" in country) {
+                cellule1.textContent = country?.translationFR;
+            } else {
+                cellule1.textContent = country.name;
+            }
+
             cellule2.textContent = country.population;
             cellule3.textContent = country.area + " km²";
             cellule4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
@@ -360,7 +370,184 @@ function afficheInformations() {
     });
 }
 
+// initialise les listes déroulantes avec la liste des continents et des langues
+function initListes() {
+    //initialise les listes 
+    var listContinents = [];
+    var listLangages = [];
 
-//initialise les fonctions pour afficher les informations et drapeaux des pays
+    // parcours les pays
+    for (let theCountry in listCountries) {
+        //récupère les informations du pays
+        let country = listCountries[theCountry];
+
+        //crée la liste des continents
+        if (!listContinents.includes(country.region)) {
+            listContinents.push(country.region)
+        }
+
+        //crée la liste des langages
+        let languages = null
+        if (country && country.languages) {
+            languages = country.languages.all_languages;
+            for (const key in languages) {
+                if (!listLangages.includes(languages[key])) {
+                    listLangages.push(languages[key])
+                }
+
+            }
+        }
+    }
+
+    // trie par ordre alphabetique les tableaux
+    listContinents = listContinents.sort();
+    listLangages = listLangages.sort();
+
+    var selectContinents = document.querySelector(".selectContinents");
+    listContinents.forEach(element => {
+        let opt = document.createElement("option");
+
+        opt.value = element;
+        opt.text = element;
+
+        selectContinents.add(opt, null);
+    });
+
+    var selectLangages = document.querySelector(".selectLangages");
+    listLangages.forEach(element => {
+        let opt = document.createElement("option");
+
+        opt.value = element;
+        opt.text = element;
+
+        selectLangages.add(opt, null);
+    });
+}
+
+document.querySelector(".submitFiltres").addEventListener("click", function () {
+    deb = 0;
+    fin = saut;
+
+    let continent = document.querySelector(".selectContinents").value;
+    let langues = document.querySelector(".selectLangages").value;
+    let inputNomPays = document.querySelector(".champTexte input").value;
+    
+    if (continent == "vide" && langues == "vide" && inputNomPays == "") {
+        listCountries = fill_db();
+    } else {
+        let newListe = [];
+        listCountries = fill_db();
+
+        if (continent != 'vide') {
+            for (let theCountry in listCountries) {
+                let country = listCountries[theCountry];
+
+                if (country.region == continent) {
+                    newListe.push(country);
+                }
+            }
+            listCountries = newListe;
+            newListe = [];
+        }
+
+        if (langues != 'vide') {
+            for (let theCountry in listCountries) {
+                let country = listCountries[theCountry];
+                let languages = null
+
+                if (country && country.languages) {
+                    languages = country.languages.all_languages;
+                    for (const key in languages) {
+                        if (languages[key] == langues) {
+                            newListe.push(country);
+                        }
+                    }
+                }
+            }
+            listCountries = newListe;
+            newListe = [];
+        }
+        
+        if (inputNomPays != "") {
+            for (let theCountry in listCountries) {
+                let country = listCountries[theCountry];
+
+                if (country.name.toLowerCase().indexOf(inputNomPays) != -1 || country.translationFR.toLowerCase().indexOf(inputNomPays) != -1) {
+                    newListe.push(country);
+                    console.log(inputNomPays);
+                }
+            }
+            listCountries = newListe;
+            newListe = [];
+        }
+    }
+
+    // rempli le tableau avec la nouvelle selection de pays
+    fillTable(deb, fin);
+
+    //actualise les fonctions pour afficher les informations et drapeaux des pays
+    afficheInformations();
+    afficheDrapeau();
+
+    // désactive les boutons PREC
+    previousButtons.forEach(element => {
+        element.disabled = true;
+    });
+
+    // désactive les boutons SUIV si jamais on arrive à la fin de la liste
+    nextButtons.forEach(element => {
+        if (fin >= document.querySelectorAll(".lesPays tbody tr").length) {
+            element.disabled = true;
+        } else {
+            element.disabled = false;
+        }
+    });
+    
+    let pageNumber = document.querySelectorAll('.page-number');
+
+    // réinitialise le numéro de page
+    pageNumber.forEach(element => {
+        element.textContent = 'Page 1';
+    });
+});
+
+document.querySelector(".reinitFiltres").addEventListener("click", function () {
+    deb = 0;
+    fin = saut;
+
+    listCountries = fill_db();
+
+    // désactive les boutons PREC
+    previousButtons.forEach(element => {
+        element.disabled = true;
+    });
+
+    // désactive les boutons SUIV si jamais on arrive à la fin de la liste
+    nextButtons.forEach(element => {
+        element.disabled = false;
+    });
+    
+    let pageNumber = document.querySelectorAll('.page-number');
+
+    // réinitialise le numéro de page
+    pageNumber.forEach(element => {
+        element.textContent = 'Page 1';
+    });
+
+    document.querySelector(".selectContinents").value = "vide";
+    document.querySelector(".selectLangages").value = "vide";
+    document.querySelector(".champTexte input").value = "";
+
+    // rempli le tableau avec la nouvelle selection de pays
+    fillTable(deb, fin);
+
+    //actualise les fonctions pour afficher les informations et drapeaux des pays
+    afficheInformations();
+    afficheDrapeau();
+});
+
+//initialise la page
+fillTable(deb, fin);
 afficheInformations();
 afficheDrapeau();
+initListes();

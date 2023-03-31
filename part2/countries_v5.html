@@ -16,9 +16,9 @@
                 <li><a href="template.html">Template</a></li>
                 <li><a href="countries_v1.html">Countries V1</a></li>
                 <li><a href="countries_v2.html">Countries V2</a></li>
-                <li><a class="active" href="countries_v3.html">Countries V3</a></li>
+                <li><a href="countries_v3.html">Countries V3</a></li>
                 <li><a href="countries_v4.html">Countries V4</a></li>
-                <li><a href="countries_v5.html">Countries V5</a></li>
+                <li><a class="active" href="countries_v5.html">Countries V5</a></li>
             </ul>
         </nav>
         <hr>
@@ -30,11 +30,36 @@
                 <span class="page-number">Page 1</span>
                 <button class="next-button">SUIV</button>
             </div>
+            <div class="filtres">
+                <h2>Filtres :</h2>
+                <div>
+                    <div class="listeDeroulante">
+                        <label for="listeContinents">Continent :</label>
+                        <select class="selectContinents" name="Continents" id="listeContinents">
+                            <option value="vide">-- Aucun continent séléctioné --</option>
+                        </select>
+                    </div>
+                    <div class="listeDeroulante">
+                        <label for="listeLangages">Langues :</label>
+                        <select class="selectLangages" name="Langages" id="listeLangages">
+                            <option value="vide">-- Aucune langue séléctioné --</option>
+                        </select>
+                    </div>
+                    <div class="champTexte">
+                        <label for="champPays">Nom de pays :</label>
+                        <input type="text" id="champPays" name="Pays" size="15" placeholder="Nom de pays">
+                    </div>
+                    <div>
+                        <button class="submitFiltres">Valider</button>
+                        <button class="reinitFiltres">Réinitialiser</button>
+                    </div>
+                </div>
+            </div>
             <div>
                 <table class="lesPays">
                     <thead>
-                        <tr>
-                            <th>Nom en français</th>
+                        <tr class="tris">
+                            <th class="sortHeader">Nom en français</th>
                             <th>Population</th>
                             <th>Surface</th>
                             <th>Densité de population</th>
@@ -78,6 +103,6 @@
         <img class="drapeauGrand" src="" alt="">
     </main>
 </body>
-<script src="countriesV3.js" type="module"></script>
+<script src="countriesV5.js" type="module"></script>
 
 </html>
