@@ -1,0 +1,113 @@
+/* Menu navigation entre fichiers */
+
+.navFichiers a {
+    color: blue;
+}
+
+.navFichiers {
+    width: 100%;
+}
+
+.navFichiers ul {
+    display: flex;
+    justify-content: space-around;
+}
+
+.navFichiers ul {
+    list-style: none;
+}
+
+.navFichiers .active {
+    color: red;
+}
+
+/* filtres, tris et pagination */
+
+.pagination {
+    margin: 1em 0;
+}
+
+.filtres h2 {
+    margin: 0;
+}
+
+.filtres > div {
+    margin: .5em 0 1em 0;
+}
+
+.tris th {
+    cursor: pointer;
+}
+
+.sortHeader {
+    font-weight: 900 !important;
+}
+
+/* Affichage de tous les pays */
+
+.lesPays, .detailsPays table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.lesPays thead th {
+    font-weight: normal;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+.lesPays th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.lesPays img {
+    height: 1em;
+    width: auto;
+}
+
+/* Detail d'un pays */
+
+.detailsPays th {
+    color: white;
+    background-color: rgb(255, 70, 70);
+}
+
+.detailsPays table {
+    display: none;
+    position: fixed;
+    width: 80%;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.detailsPays table td {
+    background-color: white;
+}
+
+.closeButton {
+    display: none;
+    position: fixed;
+    top: 24%;
+    right: 6%;
+    border-radius: 40px;
+    background-color: rgb(255, 70, 70);
+    cursor: pointer;
+    padding: .2em;
+    border: solid 1px black;
+}
+
+.drapeauGrand {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 20em;
+    width: auto;
+}
