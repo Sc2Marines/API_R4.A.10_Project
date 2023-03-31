@@ -260,7 +260,7 @@ var MyNameSpace = function () {
                         for (let key in languages) {
                             if (key in getCountryByName(country).getLanguages().get_all_languages()) {
                                 console.log(`        - ${languages[key]}`);
-                                html += languages[key] + ", " ;
+                                html += languages[key] + ", ";
                             }
                         }
                         html += "]<br>";
@@ -465,16 +465,6 @@ var MyNameSpace = function () {
         return html;
     }
 
-
-
-
-
-
-
-
-
-
-
     return {
         getAllFunctions: getAllFunctions,
         outsideTheContinent: outsideTheContinent,
@@ -488,7 +478,6 @@ var MyNameSpace = function () {
         veryLongTrip: veryLongTrip
     };
 }();
-
 
 function addButtons() {
     let functions = MyNameSpace.getAllFunctions();

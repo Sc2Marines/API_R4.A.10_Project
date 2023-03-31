@@ -16,14 +16,13 @@ class Country {
         this.population = population;
         this.topLevelDomain = topLevelDomain;
         if (currencies != null) {
-            let currency =  new Currency();
+            let currency = new Currency();
             for (let i = 0; i < currencies.length; i++) {
                 currency.add_currency(currencies[i].code, currencies[i].name);
             }
             this.currencies = currency;
         }
-        else
-        {
+        else {
             this.currencies = null;
         }
         if (languages != null) {
@@ -33,8 +32,7 @@ class Country {
             }
             this.languages = language;
         }
-        else 
-        {
+        else {
             this.languages = null;
         }
         this.translationFR = translationFR;
@@ -121,7 +119,7 @@ class Country {
     settranslationFR(translationFR) {
         this.translationFR = translationFR;
     }
-    
+
     // toString method
     toString() {
         return `Alpha3Code: ${this.alpha3Code}, Area: ${this.area}, borders: ${this.borders}, Country name: ${this.name}, Capital: ${this.capital}, region: ${this.region}, Demonym: ${this.demonym}, flags: ${this.flags}, Population: ${this.population}, Top Level Domains: ${this.topLevelDomain}, Currencies: ${this.currencies}, Languages: ${this.languages}`;

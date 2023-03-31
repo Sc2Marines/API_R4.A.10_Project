@@ -1,5 +1,5 @@
 //class currency
-function currency () {
+function currency() {
     //associative array all currencies (key, value)
     this.all_currencies = new Array();
 

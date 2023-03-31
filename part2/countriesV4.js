@@ -1,16 +1,16 @@
 import fill_db from "../part1/Country.js";
 
-// variable de saut pour la pagination
-const saut = 25;
+// variable de SAUT pour la pagination
+const SAUT = 25;
 
 // valeurs initiales pour affichage
 var deb = 0;
-var fin = saut;
+var fin = SAUT;
 
-//constante pour récupérer les données
+// constante pour récupérer les données
 const LISTCOUNTRIESCONST = fill_db();
 
-//variable utilisée pour la tableau initial
+// variable utilisée pour la tableau initial
 var listCountries = fill_db();
 
 // event listener
@@ -18,6 +18,7 @@ var closeBtn = document.querySelector('.closeButton');
 var previousButtons = document.querySelectorAll('.previous-button');
 var nextButtons = document.querySelectorAll('.next-button');
 
+// fonction pour remplir le tableau
 function fillTable(start, end) {
     // réinitialise le tableau
     document.querySelectorAll(".lesPays tbody tr").forEach(element => {
@@ -39,13 +40,16 @@ function fillTable(start, end) {
         // Créer les éléments de données pour chaque colonne
         var td1 = document.createElement("td");
         td1.textContent = country.translationFR;
+        // ajoute une classe avec le alpha3Code afin de reconnaitre le pays lorsqu'on clique sur la cellule du tableau
         td1.classList.add(country.alpha3Code);
 
         var td2 = document.createElement("td");
+        // verifie que l'element existe
         if (country.population) {
+            // met en forme les chiffres
             td2.textContent = country.population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         } else {
-            td2.textContent = country.population;
+            td2.textContent = "Indéfini";
         }
         td2.classList.add(country.alpha3Code);
 
@@ -53,12 +57,16 @@ function fillTable(start, end) {
         if (country.area) {
             td3.textContent = country.area.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " km²";
         } else {
-            td3.textContent = country.area + " km²";
+            td3.textContent = "Indéfini";
         }
         td3.classList.add(country.alpha3Code);
 
         var td4 = document.createElement("td");
-        td4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
+        if (td2.textContent != "Indéfini" && td3.textContent != "Indéfini") {
+            td4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
+        } else {
+            td4.textContent = "Indéfini";
+        }
         td4.classList.add(country.alpha3Code);
 
         var td5 = document.createElement("td");
@@ -67,9 +75,11 @@ function fillTable(start, end) {
 
         var td6 = document.createElement("td");
         var img = document.createElement("img");
+        // ajoute le lien et la description pour le drapeau
         img.src = country.flags.png;
         img.alt = "Drapeau de " + country.translationFR;
         td6.appendChild(img);
+        // ajoute une classe pour la diférencier des autres cases du tableau car on ne peut pas cliquer dessus pour affiche les informations
         td6.classList.add("tdImg");
         td6.classList.add(country.alpha3Code);
 
@@ -81,11 +91,12 @@ function fillTable(start, end) {
         tr.appendChild(td5);
         tr.appendChild(td6);
 
+        // ajoute les lignes au tableau
         tableau.appendChild(tr);
     }
 
+    // masque les éléments si ils ne sont pas entre le début et la fin de la séléction
     let count = 0;
-
     document.querySelectorAll(".lesPays tbody tr").forEach(element => {
         if (count < start || count >= end) {
             element.style.display = "none";
@@ -101,8 +112,8 @@ nextButtons.forEach(nextButton => {
         window.scrollTo(0, 0);
 
         // nouvelle selection de pays
-        deb = deb + saut;
-        fin = fin + saut;
+        deb = deb + SAUT;
+        fin = fin + SAUT;
 
         // les numéros de page
         let pageNumber = document.querySelectorAll('.page-number');
@@ -151,10 +162,10 @@ previousButtons.forEach(previousButton => {
         window.scrollTo(0, 0);
 
         // verifie que deb ne va pas être negatif, car le pays -1 (et tous les autres negatifs) n'existe pas
-        if (deb >= saut) {
+        if (deb >= SAUT) {
             // fait reculer les variables pour afficher ceux d'avant
-            deb = deb - saut;
-            fin = fin - saut;
+            deb = deb - SAUT;
+            fin = fin - SAUT;
 
             // numéro de page
             let pageNumber = document.querySelectorAll('.page-number');
@@ -196,54 +207,58 @@ previousButtons.forEach(previousButton => {
     });
 });
 
+// bouton pour fermer la page 
 closeBtn.addEventListener('click', function () {
-    let leTable = document.querySelector(".detailsPays table");
     let lesPays = document.querySelector(".lesPays");
-    let pagination = document.querySelectorAll(".pagination");
-    let close = document.querySelector(".closeButton");
 
-    leTable.style.display = "none";
+    // défloute le tableau et les filtres
+    document.querySelector(".detailsPays table").style.display = "none";
     lesPays.style.filter = "blur(0px)";
     document.querySelector(".filtres").style.filter = "blur(0px)";
     lesPays.style.pointerEvents = "all";
 
-    pagination.forEach(element => {
+    // défloute les boutons suiv et prec
+    document.querySelectorAll(".pagination").forEach(element => {
         element.style.pointerEvents = "all";
         element.style.filter = "blur(0px)";
     });
 
-    close.style.display = "none";
-
+    // masque le bouton X et l'image du drapeau
+    document.querySelector(".closeButton").style.display = "none";
+    document.querySelector(".filtres").style.pointerEvents = "all";
     document.querySelector(".drapeauGrand").style.display = "none";
 
-    // supprimer la ligne nouvellement créée
+    // supprimer les éléments nouvellement créés
     let paysDetails = document.querySelectorAll(".pays-details");
     paysDetails.forEach(pays => pays.remove());
 });
 
+// fonction pour afficher le drapeau au premier plan
 function afficheDrapeau() {
     document.querySelectorAll(".tdImg").forEach(element => {
         element.addEventListener('click', function () {
-
+            // récupère la 2ème classe du th du drapeau à savoir le alpha3Code du pays
             let lesClasses = element.className.split(' ');
             let country = LISTCOUNTRIESCONST[lesClasses[1]];
-            let close = document.querySelector(".closeButton");
             let img = document.querySelector(".drapeauGrand");
-
             let lesPays = document.querySelector(".lesPays");
-            let pagination = document.querySelectorAll(".pagination");
 
+            // floute et desactive les evenements de souris sur le tableau principal
+            document.querySelector(".filtres").style.pointerEvents = "none";
+            document.querySelector(".filtres").style.filter = "blur(2px)";
             lesPays.style.filter = "blur(2px)";
             lesPays.style.pointerEvents = "none";
 
-            pagination.forEach(element => {
+            // idem sur les boutons suiv et prec
+            document.querySelectorAll(".pagination").forEach(element => {
                 element.style.pointerEvents = "none";
                 element.style.filter = "blur(2px)";
             });
 
+            // affiche le drapeau
             img.style.display = "block";
             img.src = country.flags.png;
-            close.style.display = "block";
+            document.querySelector(".closeButton").style.display = "block";
         });
     });
 }
@@ -262,6 +277,7 @@ function afficheInformations() {
             lesPays.style.filter = "blur(2px)";
             document.querySelector(".filtres").style.filter = "blur(2px)";
             lesPays.style.pointerEvents = "none";
+            document.querySelector(".filtres").style.pointerEvents = "none";
 
             pagination.forEach(element => {
                 element.style.pointerEvents = "none";
@@ -317,9 +333,24 @@ function afficheInformations() {
                 cellule1.textContent = country.name;
             }
 
-            cellule2.textContent = country.population;
-            cellule3.textContent = country.area + " km²";
-            cellule4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
+            if (country.population) {
+                cellule2.textContent = country.population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+            } else {
+                cellule2.textContent = "Indéfini";
+            }
+
+            if (country.area) {
+                cellule3.textContent = country.area.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " km²";
+            } else {
+                cellule3.textContent = "Indéfini";
+            }
+
+            if (cellule2.textContent != "Indéfini" && cellule3.textContent != "Indéfini") {
+                cellule4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
+            } else {
+                cellule4.textContent = "Indéfini";
+            }
+
             cellule5.textContent = country.region;
             cellule6.textContent = country.alpha3Code;
 
@@ -426,12 +457,12 @@ function initListes() {
 
 document.querySelector(".submitFiltres").addEventListener("click", function () {
     deb = 0;
-    fin = saut;
+    fin = SAUT;
 
     let continent = document.querySelector(".selectContinents").value;
     let langues = document.querySelector(".selectLangages").value;
     let inputNomPays = document.querySelector(".champTexte input").value;
-    
+
     if (continent == "vide" && langues == "vide" && inputNomPays == "") {
         listCountries = fill_db();
     } else {
@@ -467,7 +498,7 @@ document.querySelector(".submitFiltres").addEventListener("click", function () {
             listCountries = newListe;
             newListe = [];
         }
-        
+
         if (inputNomPays != "") {
             for (let theCountry in listCountries) {
                 let country = listCountries[theCountry];
@@ -502,7 +533,7 @@ document.querySelector(".submitFiltres").addEventListener("click", function () {
             element.disabled = false;
         }
     });
-    
+
     let pageNumber = document.querySelectorAll('.page-number');
 
     // réinitialise le numéro de page
@@ -513,7 +544,7 @@ document.querySelector(".submitFiltres").addEventListener("click", function () {
 
 document.querySelector(".reinitFiltres").addEventListener("click", function () {
     deb = 0;
-    fin = saut;
+    fin = SAUT;
 
     listCountries = fill_db();
 
@@ -526,7 +557,7 @@ document.querySelector(".reinitFiltres").addEventListener("click", function () {
     nextButtons.forEach(element => {
         element.disabled = false;
     });
-    
+
     let pageNumber = document.querySelectorAll('.page-number');
 
     // réinitialise le numéro de page

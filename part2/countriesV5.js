@@ -10,7 +10,7 @@ const LISTCOUNTRIESCONST = fill_db();
 var deb = 0;
 var fin = SAUT;
 
-//variable utilisée pour la tableau initial
+// variable utilisée pour la tableau initial
 var listCountries = fill_db();
 
 // trie le tableau initial par noms français
@@ -338,9 +338,24 @@ function afficheInformations() {
                 cellule1.textContent = country.name;
             }
 
-            cellule2.textContent = country.population;
-            cellule3.textContent = country.area + " km²";
-            cellule4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
+            if (country.population) {
+                cellule2.textContent = country.population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+            } else {
+                cellule2.textContent = "Indéfini";
+            }
+
+            if (country.area) {
+                cellule3.textContent = country.area.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " km²";
+            } else {
+                cellule3.textContent = "Indéfini";
+            }
+
+            if (cellule2.textContent != "Indéfini" && cellule3.textContent != "Indéfini") {
+                cellule4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
+            } else {
+                cellule4.textContent = "Indéfini";
+            }
+
             cellule5.textContent = country.region;
             cellule6.textContent = country.alpha3Code;
 
@@ -495,7 +510,6 @@ document.querySelector(".submitFiltres").addEventListener("click", function () {
 
                 if (country.name.toLowerCase().indexOf(inputNomPays) != -1 || country.translationFR.toLowerCase().indexOf(inputNomPays) != -1) {
                     newListe.push(country);
-                    console.log(inputNomPays);
                 }
             }
             listCountries = newListe;
@@ -574,20 +588,43 @@ document.querySelectorAll('.tris th:not(:last-child)').forEach(element => {
         previousButtons.forEach(element => {
             element.disabled = true;
         });
-    
+
         // désactive les boutons SUIV si jamais on arrive à la fin de la liste
         nextButtons.forEach(element => {
             element.disabled = false;
         });
-    
+
         let pageNumber = document.querySelectorAll('.page-number');
-    
+
         // réinitialise le numéro de page
         pageNumber.forEach(element => {
             element.textContent = 'Page 1';
         });
 
         var columnIndex = this.cellIndex;
+
+        document.querySelector(".tris th:nth-child(" + (columnIndex + 1) + "n)").classList.add("sortHeader");
+        document.querySelectorAll(".tris th:not(:nth-child(" + (columnIndex + 1) + "))").forEach(function (element) {
+            element.classList.remove("sortHeader");
+        });
+
+        // trie le tableau initial par noms français
+        listCountriesCopy = Object.values(listCountries).slice();
+
+        for (let i = 0; i < listCountriesCopy.length; i++) {
+            // Go through the elements behind it.
+            for (let j = i - 1; j > -1; j--) {
+                // Value comparison using ascending order of sortBy.
+                if (listCountriesCopy[j + 1].translationFR.localeCompare(listCountriesCopy[j].translationFR) < 0) {
+                    // Swap
+                    [listCountriesCopy[j + 1], listCountriesCopy[j]] = [listCountriesCopy[j],
+                    listCountriesCopy[j + 1],
+                    ];
+                }
+            }
+        }
+        listCountries = listCountriesCopy;
+
         sortTable(columnIndex);
     });
 });
@@ -672,6 +709,10 @@ function sortTable(index) {
     }
 
     fillTable(deb, fin);
+
+    //actualise les fonctions pour afficher les informations et drapeaux des pays
+    afficheInformations();
+    afficheDrapeau();
 }
 
 //initialise la page

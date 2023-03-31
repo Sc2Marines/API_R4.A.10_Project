@@ -1,13 +1,13 @@
 import fill_db from "../part1/Country.js";
 
-// variable de saut pour la pagination
-const saut = 25;
+// variable de SAUT pour la pagination
+const SAUT = 25;
 
 // valeurs initiales pour affichage
 var deb = 0;
-var fin = saut;
+var fin = SAUT;
 
-//listCountries array of class Country (calling method fill_db of file Country.js)
+// liste de tous les pays
 var listCountries = fill_db();
 
 // affiche les pays
@@ -18,11 +18,12 @@ var closeBtn = document.querySelector('.closeButton');
 var previousButtons = document.querySelectorAll('.previous-button');
 var nextButtons = document.querySelectorAll('.next-button');
 
+// Rempli le tableau avec les lays de la liste
 function fillTable(start, end) {
     // parcours les pays
     for (let theCountry in listCountries) {
-        
-        //récupère les informations du pays
+
+        // récupère les informations du pays
         let country = listCountries[theCountry];
 
         // séléctionne le tableau
@@ -34,13 +35,16 @@ function fillTable(start, end) {
         // Créer les éléments de données pour chaque colonne
         var td1 = document.createElement("td");
         td1.textContent = country.translationFR;
+        // ajoute une classe avec le alpha3Code afin de pouvoir récupérer le pays pour récupérer les informations
         td1.classList.add(country.alpha3Code);
 
         var td2 = document.createElement("td");
+        // verifie que l'élément existe
         if (country.population) {
+            // met en forme les chiffres afin de mettre un espace tous les 3 numéros
             td2.textContent = country.population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         } else {
-            td3.textContent = country.population;
+            td2.textContent = "Indéfini";
         }
         td2.classList.add(country.alpha3Code);
 
@@ -48,12 +52,16 @@ function fillTable(start, end) {
         if (country.area) {
             td3.textContent = country.area.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " km²";
         } else {
-            td3.textContent = country.area + " km²";
+            td3.textContent = "Indéfini";
         }
         td3.classList.add(country.alpha3Code);
 
         var td4 = document.createElement("td");
-        td4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
+        if (td2.textContent != "Indéfini" && td3.textContent != "Indéfini") {
+            td4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
+        } else {
+            td4.textContent = "Indéfini";
+        }
         td4.classList.add(country.alpha3Code);
 
         var td5 = document.createElement("td");
@@ -62,6 +70,7 @@ function fillTable(start, end) {
 
         var td6 = document.createElement("td");
         var img = document.createElement("img");
+        // mets les liens et description pour le drapeau
         img.src = country.flags.png;
         img.alt = "Drapeau de " + country.translationFR;
         td6.appendChild(img);
@@ -76,11 +85,12 @@ function fillTable(start, end) {
         tr.appendChild(td5);
         tr.appendChild(td6);
 
+        // ajoute les lignes au tableau
         tableau.appendChild(tr);
     }
 
+    // masque les éléments qui ne sont pas entre la séléction de début et de fin
     let count = 0;
-
     document.querySelectorAll(".lesPays tbody tr").forEach(element => {
         if (count < start || count > end) {
             element.style.display = "none";
@@ -97,8 +107,8 @@ nextButtons.forEach(nextButton => {
         window.scrollTo(0, 0);
 
         // nouvelle selection de pays
-        deb = deb + saut;
-        fin = fin + saut;
+        deb = deb + SAUT;
+        fin = fin + SAUT;
 
         // les numéros de page
         let pageNumber = document.querySelectorAll('.page-number');
@@ -147,10 +157,10 @@ previousButtons.forEach(previousButton => {
         window.scrollTo(0, 0);
 
         // verifie que deb ne va pas être negatif, car le pays -1 (et tous les autres negatifs) n'existe pas
-        if (deb >= saut) {
+        if (deb >= SAUT) {
             // fait reculer les variables pour afficher ceux d'avant
-            deb = deb - saut;
-            fin = fin - saut;
+            deb = deb - SAUT;
+            fin = fin - SAUT;
 
             // numéro de page
             let pageNumber = document.querySelectorAll('.page-number');
@@ -192,124 +202,140 @@ previousButtons.forEach(previousButton => {
     });
 });
 
+// bouton pour masque les informations du pays et le drapeau
 closeBtn.addEventListener('click', function () {
-    let leTable = document.querySelector(".detailsPays table");
     let lesPays = document.querySelector(".lesPays");
-    let pagination = document.querySelectorAll(".pagination");
-    let close = document.querySelector(".closeButton");
 
-    leTable.style.display = "none";
+    // masque le tableau d'information et retire le flou 
+    document.querySelector(".detailsPays table").style.display = "none";
     lesPays.style.filter = "blur(0px)";
     lesPays.style.pointerEvents = "all";
 
-    pagination.forEach(element => {
+    // réactive les evenements de la souris sur les boutons 
+    document.querySelectorAll(".pagination").forEach(element => {
         element.style.pointerEvents = "all";
         element.style.filter = "blur(0px)";
     });
 
-    close.style.display = "none";
-
-    document.querySelector(".drapeauGrand").style.display = "none";
+    // masque le bouton X
+    document.querySelector(".closeButton").style.display = "none";
 
     // supprimer la ligne nouvellement créée
     let paysDetails = document.querySelectorAll(".pays-details");
     paysDetails.forEach(pays => pays.remove());
 });
 
-function afficheDrapeau() {
+// fonction pour afficher le drapeau
+function afficheDrapeau() { 
     document.querySelectorAll(".tdImg").forEach(element => {
         element.addEventListener('click', function () {
-
+            // récupère la 2ème classe du th du drapeau à savoir le alpha3Code du pays
             let lesClasses = element.className.split(' ');
             let country = listCountries[lesClasses[1]];
-            let close = document.querySelector(".closeButton");
+
             let img = document.querySelector(".drapeauGrand");
-
             let lesPays = document.querySelector(".lesPays");
-            let pagination = document.querySelectorAll(".pagination");
 
+            // floute et desactive les evenements de la souris sur le tableau de tous les pays
             lesPays.style.filter = "blur(2px)";
             lesPays.style.pointerEvents = "none";
 
-            pagination.forEach(element => {
+            // floute et desactive les evenements de la souris sur le tableau de tous les pays
+            document.querySelectorAll(".pagination").forEach(element => {
                 element.style.pointerEvents = "none";
                 element.style.filter = "blur(2px)";
             });
-
-            img.style.display = "block";
+            
+            // ajoute le lien du drapeau à l'image
             img.src = country.flags.png;
-            close.style.display = "block";
+
+            // affiche le drapeau et le bouton X
+            img.style.display = "block";
+            document.querySelector(".closeButton").style.display = "block";
         });
     });
 }
 
+// fonction pour afficher les informations du pays sur lequel on clique
 function afficheInformations() {
     document.querySelectorAll('.lesPays td:not(.tdImg)').forEach(element => {
         // détecte les clics sur le tableau pour renvoyer les informations du pays
         element.addEventListener('click', function () {
             let leTable = document.querySelector(".detailsPays table");
             let lesPays = document.querySelector(".lesPays");
-            let pagination = document.querySelectorAll(".pagination");
-            let close = document.querySelector(".closeButton");
             let country = listCountries[event.target.classList];
 
+            // floute et desactive la souris l'arrière plan
             leTable.style.display = "block";
             lesPays.style.filter = "blur(2px)";
             lesPays.style.pointerEvents = "none";
 
-            pagination.forEach(element => {
+            // floute et desactive la souris sur les boutons suiv et prec
+            document.querySelectorAll(".pagination").forEach(element => {
                 element.style.pointerEvents = "none";
                 element.style.filter = "blur(2px)";
             });
 
-            close.style.display = "block";
+            // fait appraitre le bouton X
+            document.querySelector(".closeButton").style.display = "block";
 
             // insérer une nouvelle ligne
             let nouvelleLigne = leTable.insertRow();
 
             // insérer des cellules dans la nouvelle ligne
             let cellule1 = nouvelleLigne.insertCell();
-            cellule1.classList.add("pays-details");
-
             let cellule2 = nouvelleLigne.insertCell();
-            cellule2.classList.add("pays-details");
-
             let cellule3 = nouvelleLigne.insertCell();
-            cellule3.classList.add("pays-details");
-
             let cellule4 = nouvelleLigne.insertCell();
-            cellule4.classList.add("pays-details");
-
             let cellule5 = nouvelleLigne.insertCell();
-            cellule5.classList.add("pays-details");
-
             let cellule6 = nouvelleLigne.insertCell();
-            cellule6.classList.add("pays-details");
-
             let cellule7 = nouvelleLigne.insertCell();
-            cellule7.classList.add("pays-details");
-
             let cellule8 = nouvelleLigne.insertCell();
-            cellule8.classList.add("pays-details");
-
             let cellule9 = nouvelleLigne.insertCell();
-            cellule9.classList.add("pays-details");
-
             let cellule10 = nouvelleLigne.insertCell();
-            cellule10.classList.add("pays-details");
-
             let cellule11 = nouvelleLigne.insertCell();
-            cellule11.classList.add("pays-details");
-
             let cellule12 = nouvelleLigne.insertCell();
+
+            cellule1.classList.add("pays-details");
+            cellule2.classList.add("pays-details");
+            cellule3.classList.add("pays-details");
+            cellule4.classList.add("pays-details");
+            cellule5.classList.add("pays-details");
+            cellule6.classList.add("pays-details");
+            cellule7.classList.add("pays-details");
+            cellule8.classList.add("pays-details");
+            cellule9.classList.add("pays-details");
+            cellule10.classList.add("pays-details");
+            cellule11.classList.add("pays-details");
             cellule12.classList.add("pays-details");
 
-
             // ajouter des données aux cellules
-            cellule1.textContent = country.name;
-            cellule2.textContent = country.population;
-            cellule3.textContent = country.area + " km²";
-            cellule4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
+            // verifie que les informations existent
+            if (country && "translationFR" in country) {
+                cellule1.textContent = country?.translationFR;
+            } else {
+                cellule1.textContent = country.name;
+            }
+
+            if (country.population) {
+                // met en forme les chiffres en mettant des espaces tous les 3 caracteres
+                cellule2.textContent = country.population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+            } else {
+                cellule2.textContent = "Indéfini";
+            }
+
+            if (country.area) {
+                cellule3.textContent = country.area.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " km²";
+            } else {
+                cellule3.textContent = "Indéfini";
+            }
+
+            if (cellule2.textContent != "Indéfini" && cellule3.textContent != "Indéfini") {
+                cellule4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
+            } else {
+                cellule4.textContent = "Indéfini";
+            }
+
             cellule5.textContent = country.region;
             cellule6.textContent = country.alpha3Code;
 
@@ -339,6 +365,7 @@ function afficheInformations() {
 
             let currencies = null;
             if (country && country.currencies) {
+                // parcours toutes les monnaies
                 currencies = country.currencies.all_currencies;
                 for (const key in currencies) {
                     cellule11.textContent += `${key}: ${currencies[key]}\n`;
@@ -359,7 +386,6 @@ function afficheInformations() {
         });
     });
 }
-
 
 //initialise les fonctions pour afficher les informations et drapeaux des pays
 afficheInformations();
