@@ -1,17 +1,34 @@
 import fill_db from "../part1/Country.js";
 
-// variable de saut pour la pagination
-const saut = 25;
-
-// valeurs initiales pour affichage
-var deb = 0;
-var fin = saut;
+// variable de SAUT pour la pagination
+const SAUT = 25;
 
 //constante pour récupérer les données
 const LISTCOUNTRIESCONST = fill_db();
 
+// valeurs initiales pour affichage
+var deb = 0;
+var fin = SAUT;
+
 //variable utilisée pour la tableau initial
 var listCountries = fill_db();
+
+// trie le tableau initial par noms français
+var listCountriesCopy = Object.values(listCountries).slice();
+
+for (let i = 0; i < listCountriesCopy.length; i++) {
+    // Go through the elements behind it.
+    for (let j = i - 1; j > -1; j--) {
+        // Value comparison using ascending order of sortBy.
+        if (listCountriesCopy[j + 1].translationFR.localeCompare(listCountriesCopy[j].translationFR) < 0) {
+            // Swap
+            [listCountriesCopy[j + 1], listCountriesCopy[j]] = [listCountriesCopy[j],
+            listCountriesCopy[j + 1],
+            ];
+        }
+    }
+}
+listCountries = listCountriesCopy;
 
 // event listener
 var closeBtn = document.querySelector('.closeButton');
@@ -45,7 +62,7 @@ function fillTable(start, end) {
         if (country.population) {
             td2.textContent = country.population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         } else {
-            td2.textContent = country.population;
+            td2.textContent = "Indéfini";
         }
         td2.classList.add(country.alpha3Code);
 
@@ -53,12 +70,16 @@ function fillTable(start, end) {
         if (country.area) {
             td3.textContent = country.area.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " km²";
         } else {
-            td3.textContent = country.area + " km²";
+            td3.textContent = "Indéfini";
         }
         td3.classList.add(country.alpha3Code);
 
         var td4 = document.createElement("td");
-        td4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
+        if (td2.textContent != "Indéfini" && td3.textContent != "Indéfini") {
+            td4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
+        } else {
+            td4.textContent = "Indéfini";
+        }
         td4.classList.add(country.alpha3Code);
 
         var td5 = document.createElement("td");
@@ -96,13 +117,13 @@ function fillTable(start, end) {
 
 // les boutons SUIV
 nextButtons.forEach(nextButton => {
-    nextButton.addEventListener('click', function (event) {
+    nextButton.addEventListener('click', function () {
         //remonte en haut de la page
         window.scrollTo(0, 0);
 
         // nouvelle selection de pays
-        deb = deb + saut;
-        fin = fin + saut;
+        deb = deb + SAUT;
+        fin = fin + SAUT;
 
         // les numéros de page
         let pageNumber = document.querySelectorAll('.page-number');
@@ -145,16 +166,16 @@ nextButtons.forEach(nextButton => {
 
 // boutons PREC
 previousButtons.forEach(previousButton => {
-    previousButton.addEventListener('click', function (event) {
+    previousButton.addEventListener('click', function () {
 
         // remonte en haut de la page
         window.scrollTo(0, 0);
 
         // verifie que deb ne va pas être negatif, car le pays -1 (et tous les autres negatifs) n'existe pas
-        if (deb >= saut) {
+        if (deb >= SAUT) {
             // fait reculer les variables pour afficher ceux d'avant
-            deb = deb - saut;
-            fin = fin - saut;
+            deb = deb - SAUT;
+            fin = fin - SAUT;
 
             // numéro de page
             let pageNumber = document.querySelectorAll('.page-number');
@@ -426,12 +447,12 @@ function initListes() {
 
 document.querySelector(".submitFiltres").addEventListener("click", function () {
     deb = 0;
-    fin = saut;
+    fin = SAUT;
 
     let continent = document.querySelector(".selectContinents").value;
     let langues = document.querySelector(".selectLangages").value;
     let inputNomPays = document.querySelector(".champTexte input").value;
-    
+
     if (continent == "vide" && langues == "vide" && inputNomPays == "") {
         listCountries = fill_db();
     } else {
@@ -467,7 +488,7 @@ document.querySelector(".submitFiltres").addEventListener("click", function () {
             listCountries = newListe;
             newListe = [];
         }
-        
+
         if (inputNomPays != "") {
             for (let theCountry in listCountries) {
                 let country = listCountries[theCountry];
@@ -502,7 +523,7 @@ document.querySelector(".submitFiltres").addEventListener("click", function () {
             element.disabled = false;
         }
     });
-    
+
     let pageNumber = document.querySelectorAll('.page-number');
 
     // réinitialise le numéro de page
@@ -513,7 +534,7 @@ document.querySelector(".submitFiltres").addEventListener("click", function () {
 
 document.querySelector(".reinitFiltres").addEventListener("click", function () {
     deb = 0;
-    fin = saut;
+    fin = SAUT;
 
     listCountries = fill_db();
 
@@ -526,7 +547,7 @@ document.querySelector(".reinitFiltres").addEventListener("click", function () {
     nextButtons.forEach(element => {
         element.disabled = false;
     });
-    
+
     let pageNumber = document.querySelectorAll('.page-number');
 
     // réinitialise le numéro de page
@@ -545,6 +566,113 @@ document.querySelector(".reinitFiltres").addEventListener("click", function () {
     afficheInformations();
     afficheDrapeau();
 });
+
+document.querySelectorAll('.tris th:not(:last-child)').forEach(element => {
+    element.addEventListener('click', function () {
+
+        // désactive les boutons PREC
+        previousButtons.forEach(element => {
+            element.disabled = true;
+        });
+    
+        // désactive les boutons SUIV si jamais on arrive à la fin de la liste
+        nextButtons.forEach(element => {
+            element.disabled = false;
+        });
+    
+        let pageNumber = document.querySelectorAll('.page-number');
+    
+        // réinitialise le numéro de page
+        pageNumber.forEach(element => {
+            element.textContent = 'Page 1';
+        });
+
+        var columnIndex = this.cellIndex;
+        sortTable(columnIndex);
+    });
+});
+
+function sortTable(index) {
+    deb = 0;
+    fin = SAUT;
+
+    var sortBy;
+    var numeric = false;
+
+    switch (index) {
+        case 1:
+            sortBy = "population";
+            numeric = true;
+            break;
+
+        case 2:
+            sortBy = "area";
+            numeric = true;
+            break;
+
+        case 3:
+            sortBy = "getPopDensity";
+            numeric = true;
+            break;
+
+        case 4:
+            sortBy = "region";
+            break;
+
+        default:
+            sortBy = "translationFR";
+            break;
+    }
+
+    if (numeric == true) {
+        // Start from the second element.
+        listCountriesCopy = Object.values(listCountries).slice();
+
+        for (let i = 0; i < listCountriesCopy.length; i++) {
+            // Go through the elements behind it.
+            for (let j = i - 1; j > -1; j--) {
+                // Value comparison using ascending order of population.
+                if (sortBy == "getPopDensity") {
+                    if (listCountriesCopy[j + 1].getPopDensity() < listCountriesCopy[j].getPopDensity()) {
+                        // Swap
+                        [listCountriesCopy[j + 1], listCountriesCopy[j]] = [listCountriesCopy[j],
+                        listCountriesCopy[j + 1],
+                        ];
+                    }
+                }
+                else {
+                    if (listCountriesCopy[j + 1][sortBy] < listCountriesCopy[j][sortBy]) {
+                        // Swap
+                        [listCountriesCopy[j + 1], listCountriesCopy[j]] = [listCountriesCopy[j],
+                        listCountriesCopy[j + 1],
+                        ];
+                    }
+                }
+            }
+        }
+        listCountries = listCountriesCopy;
+
+    } else {
+        // Start from the second element.
+        listCountriesCopy = Object.values(listCountries).slice();
+
+        for (let i = 0; i < listCountriesCopy.length; i++) {
+            // Go through the elements behind it.
+            for (let j = i - 1; j > -1; j--) {
+                // Value comparison using ascending order of sortBy.
+                if (listCountriesCopy[j + 1][sortBy].localeCompare(listCountriesCopy[j][sortBy]) < 0) {
+                    // Swap
+                    [listCountriesCopy[j + 1], listCountriesCopy[j]] = [listCountriesCopy[j],
+                    listCountriesCopy[j + 1],
+                    ];
+                }
+            }
+        }
+        listCountries = listCountriesCopy;
+    }
+
+    fillTable(deb, fin);
+}
 
 //initialise la page
 fillTable(deb, fin);

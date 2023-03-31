@@ -35,11 +35,23 @@
     margin: .5em 0 1em 0;
 }
 
+.tris th {
+    cursor: pointer;
+}
+
+.sortHeader {
+    font-weight: 900 !important;
+}
+
 /* Affichage de tous les pays */
 
 .lesPays, .detailsPays table {
     border-collapse: collapse;
     width: 100%;
+}
+
+.lesPays thead th {
+    font-weight: normal;
 }
 
 th, td {
