@@ -3,6 +3,25 @@ import fill_db from "../part1/Country.js";
 // liste de tous les pays
 let listCountries = fill_db();
 
+// trie le tableau initial par noms français
+// effectue une copie du tableau initiale pour pouvoir le manipuler plus facilement
+var listCountriesCopy = Object.values(listCountries).slice();
+// parcours tous les pays
+for (let i = 0; i < listCountriesCopy.length; i++) {
+    // parcours les éléménts avant lui
+    for (let j = i - 1; j > -1; j--) {
+        // compare si l'élément est inférieur
+        if (listCountriesCopy[j + 1].translationFR.localeCompare(listCountriesCopy[j].translationFR) < 0) {
+            // échange les éléments
+            [listCountriesCopy[j + 1], listCountriesCopy[j]] = [listCountriesCopy[j],
+            listCountriesCopy[j + 1],
+            ];
+        }
+    }
+}
+// remplace la liste des pays par la liste triées
+listCountries = listCountriesCopy;
+
 // Fonction pour remplir le tableau avec la liste des pays
 function fillTable() {
     // parcours les pays

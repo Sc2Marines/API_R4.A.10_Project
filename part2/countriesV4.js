@@ -13,6 +13,25 @@ const LISTCOUNTRIESCONST = fill_db();
 // variable utilisée pour la tableau initial
 var listCountries = fill_db();
 
+// trie le tableau initial par noms français
+// effectue une copie du tableau initiale pour pouvoir le manipuler plus facilement
+var listCountriesCopy = Object.values(listCountries).slice();
+// parcours tous les pays
+for (let i = 0; i < listCountriesCopy.length; i++) {
+    // parcours les éléménts avant lui
+    for (let j = i - 1; j > -1; j--) {
+        // compare si l'élément est inférieur
+        if (listCountriesCopy[j + 1].translationFR.localeCompare(listCountriesCopy[j].translationFR) < 0) {
+            // échange les éléments
+            [listCountriesCopy[j + 1], listCountriesCopy[j]] = [listCountriesCopy[j],
+            listCountriesCopy[j + 1],
+            ];
+        }
+    }
+}
+// remplace la liste des pays par la liste triées
+listCountries = listCountriesCopy;
+
 // event listener
 var closeBtn = document.querySelector('.closeButton');
 var previousButtons = document.querySelectorAll('.previous-button');
@@ -263,70 +282,67 @@ function afficheDrapeau() {
     });
 }
 
+// fonction pour afficher les informations d'un pays lors du clic sur l'une de ses cellules
 function afficheInformations() {
+    // parcours toutes les cellules du tableau
     document.querySelectorAll('.lesPays td:not(.tdImg)').forEach(element => {
         // détecte les clics sur le tableau pour renvoyer les informations du pays
-        element.addEventListener('click', function () {
+        element.addEventListener('click', function (event) {
+            // selectionne les éléments
             let leTable = document.querySelector(".detailsPays table");
             let lesPays = document.querySelector(".lesPays");
-            let pagination = document.querySelectorAll(".pagination");
-            let close = document.querySelector(".closeButton");
             let country = LISTCOUNTRIESCONST[event.target.classList];
+            let filtres = document.querySelector(".filtres")
 
+            filtres.style.pointerEvents = "none";
+            filtres.style.filter = "blur(2px)";
+
+            // floute l'arrière plan
             leTable.style.display = "block";
             lesPays.style.filter = "blur(2px)";
-            document.querySelector(".filtres").style.filter = "blur(2px)";
             lesPays.style.pointerEvents = "none";
-            document.querySelector(".filtres").style.pointerEvents = "none";
 
-            pagination.forEach(element => {
+            // floute les boutons suiv et prec
+            document.querySelectorAll(".pagination").forEach(element => {
                 element.style.pointerEvents = "none";
                 element.style.filter = "blur(2px)";
             });
 
-            close.style.display = "block";
+            // affiche le bouton X
+            document.querySelector(".closeButton").style.display = "block";
 
             // insérer une nouvelle ligne
             let nouvelleLigne = leTable.insertRow();
 
             // insérer des cellules dans la nouvelle ligne
             let cellule1 = nouvelleLigne.insertCell();
-            cellule1.classList.add("pays-details");
-
             let cellule2 = nouvelleLigne.insertCell();
-            cellule2.classList.add("pays-details");
-
             let cellule3 = nouvelleLigne.insertCell();
-            cellule3.classList.add("pays-details");
-
             let cellule4 = nouvelleLigne.insertCell();
-            cellule4.classList.add("pays-details");
-
             let cellule5 = nouvelleLigne.insertCell();
-            cellule5.classList.add("pays-details");
-
             let cellule6 = nouvelleLigne.insertCell();
-            cellule6.classList.add("pays-details");
-
             let cellule7 = nouvelleLigne.insertCell();
-            cellule7.classList.add("pays-details");
-
             let cellule8 = nouvelleLigne.insertCell();
-            cellule8.classList.add("pays-details");
-
             let cellule9 = nouvelleLigne.insertCell();
-            cellule9.classList.add("pays-details");
-
             let cellule10 = nouvelleLigne.insertCell();
-            cellule10.classList.add("pays-details");
-
             let cellule11 = nouvelleLigne.insertCell();
-            cellule11.classList.add("pays-details");
-
             let cellule12 = nouvelleLigne.insertCell();
+
+            cellule1.classList.add("pays-details");
+            cellule2.classList.add("pays-details");
+            cellule3.classList.add("pays-details");
+            cellule4.classList.add("pays-details");
+            cellule5.classList.add("pays-details");
+            cellule6.classList.add("pays-details");
+            cellule7.classList.add("pays-details");
+            cellule8.classList.add("pays-details");
+            cellule9.classList.add("pays-details");
+            cellule10.classList.add("pays-details");
+            cellule11.classList.add("pays-details");
             cellule12.classList.add("pays-details");
 
             // ajouter des données aux cellules
+            // verifie que l'élément existe
             if (country && "translationFR" in country) {
                 cellule1.textContent = country?.translationFR;
             } else {
@@ -334,6 +350,7 @@ function afficheInformations() {
             }
 
             if (country.population) {
+                // met en forme les grands nombres
                 cellule2.textContent = country.population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
             } else {
                 cellule2.textContent = "Indéfini";
@@ -346,6 +363,7 @@ function afficheInformations() {
             }
 
             if (cellule2.textContent != "Indéfini" && cellule3.textContent != "Indéfini") {
+                // réduit à 2 chiffres après la virgule
                 cellule4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
             } else {
                 cellule4.textContent = "Indéfini";
@@ -378,6 +396,7 @@ function afficheInformations() {
                 cellule10.textContent = "Pas de denonyme.";
             }
 
+            // parcours toutes les monnaies pour les ajouter
             let currencies = null;
             if (country && country.currencies) {
                 currencies = country.currencies.all_currencies;
@@ -388,6 +407,7 @@ function afficheInformations() {
                 cellule11.textContent = "Pas de monnaies.";
             }
 
+            // parcours toutes les langues 
             let languages = null;
             if (country && country.languages) {
                 languages = country.languages.all_languages;
@@ -412,12 +432,14 @@ function initListes() {
         //récupère les informations du pays
         let country = listCountries[theCountry];
 
-        //crée la liste des continents
+        // crée la liste des continents
+        // si le continent n'est pas dans la liste, l'ajoute à la liste
         if (!listContinents.includes(country.region)) {
             listContinents.push(country.region)
         }
 
         //crée la liste des langages
+        // si la langue n'est pas dans la liste, l'ajoute à la liste
         let languages = null
         if (country && country.languages) {
             languages = country.languages.all_languages;
@@ -430,10 +452,11 @@ function initListes() {
         }
     }
 
-    // trie par ordre alphabetique les tableaux
+    // trie par ordre alphabetique les listes
     listContinents = listContinents.sort();
     listLangages = listLangages.sort();
 
+    // ajoute tous les continent à la liste déroulante
     var selectContinents = document.querySelector(".selectContinents");
     listContinents.forEach(element => {
         let opt = document.createElement("option");
@@ -444,6 +467,7 @@ function initListes() {
         selectContinents.add(opt, null);
     });
 
+    // ajoute toutes les langues à la liste déroulante
     var selectLangages = document.querySelector(".selectLangages");
     listLangages.forEach(element => {
         let opt = document.createElement("option");
@@ -455,62 +479,86 @@ function initListes() {
     });
 }
 
+// bouton pour valider les filtres
 document.querySelector(".submitFiltres").addEventListener("click", function () {
+    // remet l'affiche au début 
     deb = 0;
     fin = SAUT;
 
+    // récupère les valeurs des filtres
     let continent = document.querySelector(".selectContinents").value;
     let langues = document.querySelector(".selectLangages").value;
     let inputNomPays = document.querySelector(".champTexte input").value;
 
-    if (continent == "vide" && langues == "vide" && inputNomPays == "") {
-        listCountries = fill_db();
-    } else {
-        let newListe = [];
-        listCountries = fill_db();
+    // initialise une liste vide et la liste de tous les pays
+    listCountries = fill_db();
+    let newListe = [];
 
-        if (continent != 'vide') {
-            for (let theCountry in listCountries) {
-                let country = listCountries[theCountry];
+    // si le filtre continent n'est pas vide
+    if (continent != 'vide') {
+        // pour tous les pays 
+        for (let theCountry in listCountries) {
+            // récupère le pays
+            let country = listCountries[theCountry];
 
-                if (country.region == continent) {
-                    newListe.push(country);
-                }
+            // si le continent du pays correspond au continent séléctionné
+            if (country.region == continent) {
+                // ajoute le pays à la nouvelle liste
+                newListe.push(country);
             }
-            listCountries = newListe;
-            newListe = [];
         }
 
-        if (langues != 'vide') {
-            for (let theCountry in listCountries) {
-                let country = listCountries[theCountry];
-                let languages = null
+        // listCountries devient la liste filtré et réinitialise la nouvelle liste
+        listCountries = newListe;
+        newListe = [];
+    }
 
-                if (country && country.languages) {
-                    languages = country.languages.all_languages;
-                    for (const key in languages) {
-                        if (languages[key] == langues) {
-                            newListe.push(country);
-                        }
+    // verifie si une langue est séléctionnée
+    if (langues != 'vide') {
+        // pour tous les pays
+        for (let theCountry in listCountries) {
+            // séléctionne le pays et initialise une variable languages
+            let country = listCountries[theCountry];
+            let languages = null
+
+            // si la pays a des langues
+            if (country && country.languages) {
+                // ajoute les langues à la varaible
+                languages = country.languages.all_languages;
+
+                // parcours les langues
+                for (const key in languages) {
+                    // si la langue du pays correspond à la langue séléctionnée
+                    if (languages[key] == langues) {
+                        // ajoute le pays à la nouvelle liste
+                        newListe.push(country);
                     }
                 }
             }
-            listCountries = newListe;
-            newListe = [];
         }
 
-        if (inputNomPays != "") {
-            for (let theCountry in listCountries) {
-                let country = listCountries[theCountry];
+        // listCountries devient la liste filtré et réinitialise la nouvelle liste
+        listCountries = newListe;
+        newListe = [];
+    }
 
-                if (country.name.toLowerCase().indexOf(inputNomPays) != -1 || country.translationFR.toLowerCase().indexOf(inputNomPays) != -1) {
-                    newListe.push(country);
-                    console.log(inputNomPays);
-                }
+    // verifie qu'il y a une entrée dans le texte des pays 
+    if (inputNomPays != "") {
+        // parcours les pays
+        for (let theCountry in listCountries) {
+            // séléctionne le pays
+            let country = listCountries[theCountry];
+
+            // verifie que la séléction est soit dans le le nom original soit dans le nom français
+            if (country.name.toLowerCase().indexOf(inputNomPays.toLowerCase()) != -1 || country.translationFR.toLowerCase().indexOf(inputNomPays.toLowerCase()) != -1) {
+                // si oui, ajoute le pays à la nouvelle liste
+                newListe.push(country);
             }
-            listCountries = newListe;
-            newListe = [];
         }
+        
+        // listCountries devient la liste filtré et réinitialise la nouvelle liste
+        listCountries = newListe;
+        newListe = [];
     }
 
     // rempli le tableau avec la nouvelle selection de pays
@@ -534,18 +582,20 @@ document.querySelector(".submitFiltres").addEventListener("click", function () {
         }
     });
 
-    let pageNumber = document.querySelectorAll('.page-number');
-
     // réinitialise le numéro de page
+    let pageNumber = document.querySelectorAll('.page-number');
     pageNumber.forEach(element => {
         element.textContent = 'Page 1';
     });
 });
 
+// bouton pour réinitialiserles filtres
 document.querySelector(".reinitFiltres").addEventListener("click", function () {
+    // réinitialise la position de l'affichage afin d'afficher les 25 premiers
     deb = 0;
     fin = SAUT;
 
+    // réinitialise la liste des pays à afficher
     listCountries = fill_db();
 
     // désactive les boutons PREC
@@ -553,18 +603,18 @@ document.querySelector(".reinitFiltres").addEventListener("click", function () {
         element.disabled = true;
     });
 
-    // désactive les boutons SUIV si jamais on arrive à la fin de la liste
+    // réactive les boutons SUIV
     nextButtons.forEach(element => {
         element.disabled = false;
     });
 
-    let pageNumber = document.querySelectorAll('.page-number');
-
     // réinitialise le numéro de page
+    let pageNumber = document.querySelectorAll('.page-number');
     pageNumber.forEach(element => {
         element.textContent = 'Page 1';
     });
 
+    // réinitialise les listes et entrée de texte pour les filtres
     document.querySelector(".selectContinents").value = "vide";
     document.querySelector(".selectLangages").value = "vide";
     document.querySelector(".champTexte input").value = "";

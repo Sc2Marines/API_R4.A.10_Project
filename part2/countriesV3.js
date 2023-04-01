@@ -7,8 +7,30 @@ const SAUT = 25;
 var deb = 0;
 var fin = SAUT;
 
+//constante pour récupérer les données
+const LISTCOUNTRIESCONST = fill_db();
+
 // liste de tous les pays
 var listCountries = fill_db();
+
+// trie le tableau initial par noms français
+// effectue une copie du tableau initiale pour pouvoir le manipuler plus facilement
+var listCountriesCopy = Object.values(listCountries).slice();
+// parcours tous les pays
+for (let i = 0; i < listCountriesCopy.length; i++) {
+    // parcours les éléménts avant lui
+    for (let j = i - 1; j > -1; j--) {
+        // compare si l'élément est inférieur
+        if (listCountriesCopy[j + 1].translationFR.localeCompare(listCountriesCopy[j].translationFR) < 0) {
+            // échange les éléments
+            [listCountriesCopy[j + 1], listCountriesCopy[j]] = [listCountriesCopy[j],
+            listCountriesCopy[j + 1],
+            ];
+        }
+    }
+}
+// remplace la liste des pays par la liste triées
+listCountries = listCountriesCopy;
 
 // affiche les pays
 fillTable(deb, fin);
@@ -217,8 +239,9 @@ closeBtn.addEventListener('click', function () {
         element.style.filter = "blur(0px)";
     });
 
-    // masque le bouton X
+    // masque le bouton X et le drapeau
     document.querySelector(".closeButton").style.display = "none";
+    document.querySelector(".drapeauGrand").style.display = "none";
 
     // supprimer la ligne nouvellement créée
     let paysDetails = document.querySelectorAll(".pays-details");
@@ -231,7 +254,7 @@ function afficheDrapeau() {
         element.addEventListener('click', function () {
             // récupère la 2ème classe du th du drapeau à savoir le alpha3Code du pays
             let lesClasses = element.className.split(' ');
-            let country = listCountries[lesClasses[1]];
+            let country = LISTCOUNTRIESCONST[lesClasses[1]];
 
             let img = document.querySelector(".drapeauGrand");
             let lesPays = document.querySelector(".lesPays");
@@ -260,10 +283,10 @@ function afficheDrapeau() {
 function afficheInformations() {
     document.querySelectorAll('.lesPays td:not(.tdImg)').forEach(element => {
         // détecte les clics sur le tableau pour renvoyer les informations du pays
-        element.addEventListener('click', function () {
+        element.addEventListener('click', function (event) {
             let leTable = document.querySelector(".detailsPays table");
             let lesPays = document.querySelector(".lesPays");
-            let country = listCountries[event.target.classList];
+            let country = LISTCOUNTRIESCONST[event.target.classList];
 
             // floute et desactive la souris l'arrière plan
             leTable.style.display = "block";
@@ -331,6 +354,7 @@ function afficheInformations() {
             }
 
             if (cellule2.textContent != "Indéfini" && cellule3.textContent != "Indéfini") {
+                // réduit à 2 chiffres après la virgule
                 cellule4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
             } else {
                 cellule4.textContent = "Indéfini";

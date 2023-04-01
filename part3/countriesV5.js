@@ -305,7 +305,7 @@ function afficheDrapeau() {
 function afficheInformations() {
     document.querySelectorAll('.lesPays td:not(.tdImg)').forEach(element => {
         // détecte les clics sur le tableau pour renvoyer les informations du pays
-        element.addEventListener('click', function () {
+        element.addEventListener('click', function (event) {
             let leTable = document.querySelector(".detailsPays table");
             let lesPays = document.querySelector(".lesPays");
             let pagination = document.querySelectorAll(".pagination");
