@@ -1,7 +1,7 @@
 import Country from "../part1/Country.js";
 
 //AJAX call to https://restcountries.com/v2/all
-const COUNTRIES_URL = "http://localhost:6789/part3/gateway_to_restcountries.php";
+const COUNTRIES_URL = "/part3/gateway_to_restcountries.php";
 let req = new XMLHttpRequest();
 req.open("GET", COUNTRIES_URL);
 req.responseType = "json";
