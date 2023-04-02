@@ -1,12 +1,33 @@
 import fill_db from "../part1/Country.js";
 
-//listCountries array of class Country (calling method fill_db of file Country.js)
+// liste de tous les pays
 let listCountries = fill_db();
 
+// trie le tableau initial par noms français
+// effectue une copie du tableau initiale pour pouvoir le manipuler plus facilement
+var listCountriesCopy = Object.values(listCountries).slice();
+// parcours tous les pays
+for (let i = 0; i < listCountriesCopy.length; i++) {
+    // parcours les éléménts avant lui
+    for (let j = i - 1; j > -1; j--) {
+        // compare si l'élément est inférieur
+        if (listCountriesCopy[j + 1].translationFR.localeCompare(listCountriesCopy[j].translationFR) < 0) {
+            // échange les éléments
+            [listCountriesCopy[j + 1], listCountriesCopy[j]] = [listCountriesCopy[j],
+            listCountriesCopy[j + 1],
+            ];
+        }
+    }
+}
+// remplace la liste des pays par la liste triées
+listCountries = listCountriesCopy;
+
+// Fonction pour remplir le tableau avec la liste des pays
 function fillTable() {
     // parcours les pays
     for (let theCountry in listCountries) {
-        //récupère les informations du pays
+
+        // récupère les informations du pays
         let country = listCountries[theCountry];
 
         // séléctionne le tableau
@@ -18,12 +39,15 @@ function fillTable() {
         // Créer les éléments de données pour chaque colonne
         var td1 = document.createElement("td");
         td1.textContent = country.translationFR;
+        td1.classList.add(country.alpha3Code);
 
         var td2 = document.createElement("td");
+        // Verifie si la donnée existe 
         if (country.population) {
+            // Mets des espaces tous les 3 numéros afin de le mettre en forme
             td2.textContent = country.population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         } else {
-            td3.textContent = country.population;
+            td2.textContent = "Indéfini";
         }
         td2.classList.add(country.alpha3Code);
 
@@ -31,21 +55,30 @@ function fillTable() {
         if (country.area) {
             td3.textContent = country.area.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " km²";
         } else {
-            td3.textContent = country.area + " km²";
+            td3.textContent = "Indéfini";
         }
         td3.classList.add(country.alpha3Code);
 
         var td4 = document.createElement("td");
-        td4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
+        if (td2.textContent != "Indéfini" && td3.textContent != "Indéfini") {
+            td4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
+        } else {
+            td4.textContent = "Indéfini";
+        }
+        td4.classList.add(country.alpha3Code);
 
         var td5 = document.createElement("td");
         td5.textContent = country.region;
+        td5.classList.add(country.alpha3Code);
 
         var td6 = document.createElement("td");
         var img = document.createElement("img");
+        // Ajoute le lien et le nom du drapeau
         img.src = country.flags.png;
         img.alt = "Drapeau de " + country.translationFR;
         td6.appendChild(img);
+        td6.classList.add("tdImg");
+        td6.classList.add(country.alpha3Code);
 
         // Ajouter les éléments de données à la ligne de tableau
         tr.appendChild(td1);
@@ -55,8 +88,10 @@ function fillTable() {
         tr.appendChild(td5);
         tr.appendChild(td6);
 
+        // Ajoute les lignes au tableau
         tableau.appendChild(tr);
     }
 }
 
+// Execute la fonction pour remplir le tableau
 fillTable();

@@ -32,7 +32,7 @@
 }
 
 .filtres > div {
-    margin: .5em 0 1em 0;
+    margin: 0.5em 0 1em 0;
 }
 
 .tris th {
@@ -40,12 +40,13 @@
 }
 
 .sortHeader {
-    font-weight: 900 !important;
+    font-weight: 1000 !important;
 }
 
 /* Affichage de tous les pays */
 
-.lesPays, .detailsPays table {
+.lesPays,
+.detailsPays table {
     border-collapse: collapse;
     width: 100%;
 }
@@ -54,15 +55,17 @@
     font-weight: normal;
 }
 
-th, td {
+th,
+td {
     border: 1px solid black;
     padding: 8px;
     text-align: left;
 }
 
 .lesPays th {
-    background-color: #4CAF50;
+    background-color: #4caf50;
     color: white;
+    font-size: large;
 }
 
 .lesPays img {
@@ -98,7 +101,7 @@ th, td {
     border-radius: 40px;
     background-color: rgb(255, 70, 70);
     cursor: pointer;
-    padding: .2em;
+    padding: 0.2em;
     border: solid 1px black;
 }
 

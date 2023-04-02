@@ -1,28 +1,47 @@
 import fill_db from "../part1/Country.js";
 
-// variable de saut pour la pagination
-const saut = 25;
+// variable de SAUT pour la pagination
+const SAUT = 25;
 
 // valeurs initiales pour affichage
 var deb = 0;
-var fin = saut;
+var fin = SAUT;
 
-//listCountries array of class Country (calling method fill_db of file Country.js)
+// liste de tous les pays
 var listCountries = fill_db();
+
+// trie le tableau initial par noms français
+// effectue une copie du tableau initiale pour pouvoir le manipuler plus facilement
+var listCountriesCopy = Object.values(listCountries).slice();
+// parcours tous les pays
+for (let i = 0; i < listCountriesCopy.length; i++) {
+    // parcours les éléménts avant lui
+    for (let j = i - 1; j > -1; j--) {
+        // compare si l'élément est inférieur
+        if (listCountriesCopy[j + 1].translationFR.localeCompare(listCountriesCopy[j].translationFR) < 0) {
+            // échange les éléments
+            [listCountriesCopy[j + 1], listCountriesCopy[j]] = [listCountriesCopy[j],
+            listCountriesCopy[j + 1],
+            ];
+        }
+    }
+}
+// remplace la liste des pays par la liste triées
+listCountries = listCountriesCopy;
 
 // affiche les pays
 fillTable(deb, fin);
 
 // event listener
-var table = document.querySelectorAll('.lesPays td:not(.tdImg)');
-var closeBtn = document.querySelector('.closeButton');
 var previousButtons = document.querySelectorAll('.previous-button');
 var nextButtons = document.querySelectorAll('.next-button');
 
+// fonction pour remplir la tableau avec la liste des pays
 function fillTable(start, end) {
     // parcours les pays
     for (let theCountry in listCountries) {
-        //récupère les informations du pays
+
+        // récupère les informations du pays
         let country = listCountries[theCountry];
 
         // séléctionne le tableau
@@ -35,30 +54,35 @@ function fillTable(start, end) {
         var td1 = document.createElement("td");
         td1.textContent = country.translationFR;
 
+        // verifie que l'élément existe
         var td2 = document.createElement("td");
         if (country.population) {
+            // met en forme les nombres afin de mettre des espaces tous les 3 numéros
             td2.textContent = country.population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         } else {
-            td3.textContent = country.population;
+            td2.textContent = "Indéfini";
         }
-        td2.classList.add(country.alpha3Code);
 
         var td3 = document.createElement("td");
         if (country.area) {
             td3.textContent = country.area.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " km²";
         } else {
-            td3.textContent = country.area + " km²";
+            td3.textContent = "Indéfini";
         }
-        td3.classList.add(country.alpha3Code);
 
         var td4 = document.createElement("td");
-        td4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
+        if (td2.textContent != "Indéfini" && td3.textContent != "Indéfini") {
+            td4.textContent = Math.round(country.getPopDensity() * 100) / 100 + " hab/km²";
+        } else {
+            td4.textContent = "Indéfini";
+        }
 
         var td5 = document.createElement("td");
         td5.textContent = country.region;
 
         var td6 = document.createElement("td");
         var img = document.createElement("img");
+        // ajoute le lien et une description pour le drapeau
         img.src = country.flags.png;
         img.alt = "Drapeau de " + country.translationFR;
         td6.appendChild(img);
@@ -71,11 +95,12 @@ function fillTable(start, end) {
         tr.appendChild(td5);
         tr.appendChild(td6);
 
+        // ajoute les lignes au tableau
         tableau.appendChild(tr);
     }
 
+    // masque les éléments qui ne sont pas entre la séléction de début et de fin
     let count = 0;
-
     document.querySelectorAll(".lesPays tbody tr").forEach(element => {
         if (count < start || count > end) {
             element.style.display = "none";
@@ -92,8 +117,8 @@ nextButtons.forEach(nextButton => {
         window.scrollTo(0, 0);
 
         // nouvelle selection de pays
-        deb = deb + saut;
-        fin = fin + saut;
+        deb = deb + SAUT;
+        fin = fin + SAUT;
 
         // les numéros de page
         let pageNumber = document.querySelectorAll('.page-number');
@@ -125,8 +150,6 @@ nextButtons.forEach(nextButton => {
             tableau.deleteRow(i);
         }
 
-        table = document.querySelectorAll('.lesPays td:not(.tdImg)');
-
         // ajoute la nouvelle selection dans le table
         fillTable(deb, fin);
     });
@@ -140,10 +163,10 @@ previousButtons.forEach(previousButton => {
         window.scrollTo(0, 0);
 
         // verifie que deb ne va pas être negatif, car le pays -1 (et tous les autres negatifs) n'existe pas
-        if (deb >= saut) {
+        if (deb >= SAUT) {
             // fait reculer les variables pour afficher ceux d'avant
-            deb = deb - saut;
-            fin = fin - saut;
+            deb = deb - SAUT;
+            fin = fin - SAUT;
 
             // numéro de page
             let pageNumber = document.querySelectorAll('.page-number');
@@ -180,5 +203,3 @@ previousButtons.forEach(previousButton => {
         fillTable(deb, fin);
     });
 });
-
-table = document.querySelectorAll('.lesPays td:not(.tdImg)');
